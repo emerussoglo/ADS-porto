@@ -1,0 +1,179 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+.page {
+  min-height: calc(100vh - 82px);
+  background: #f7f3eb;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+.hero h1,
+.card h2 {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+.button {
+  border-radius: 999px;
+  transition:
+    transform 0.2s,
+    background 0.2s,
+    box-shadow 0.2s;
+}
+.button:hover {
+  transform: translateY(-3px);
+  background: #d75d48;
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(215, 93, 72, 0.22);
+}
+@media (max-width: 760px) {
+  .hero {
+    padding: 80px 8vw 70px;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    padding-top: 45px;
+  }
+  .card {
+    min-height: 220px;
+  }
+  .card h2 {
+    margin-top: 30px;
+  }
+}
+.hero {
+  padding: 110px 9vw 85px;
+  background: #102d2b;
+  color: #fbfaf7;
+  position: relative;
+  overflow: hidden;
+}
+.hero:after {
+  content: "";
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border: 1px solid rgba(225, 173, 76, 0.35);
+  border-radius: 50%;
+  right: 7vw;
+  top: -170px;
+  box-shadow:
+    0 0 0 35px rgba(225, 173, 76, 0.08),
+    0 0 0 70px rgba(225, 173, 76, 0.05);
+}
+.eyebrow {
+  position: relative;
+  z-index: 1;
+  color: #b8c8c0;
+  text-transform: uppercase;
+  letter-spacing: 0.17em;
+  font-size: 10px;
+  font-weight: 800;
+}
+.eyebrow span {
+  display: inline-block;
+  background: #d75d48;
+  width: 26px;
+  height: 2px;
+  margin-right: 9px;
+  vertical-align: middle;
+}
+.hero h1 {
+  position: relative;
+  z-index: 1;
+  margin: 24px 0 20px;
+  font:
+    500 clamp(46px, 7vw, 88px)/0.98 "Plus Jakarta Sans",
+    sans-serif;
+  letter-spacing: -0.04em;
+}
+.hero h1 em {
+  color: #e1ad4c;
+  font-style: italic;
+}
+.intro {
+  position: relative;
+  z-index: 1;
+  max-width: 590px;
+  color: #b8c8c0;
+  line-height: 1.8;
+  font-size: 14px;
+}
+.button {
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  margin-top: 30px;
+  padding: 15px 20px;
+  color: #102d2b;
+  background: #e1ad4c;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+}
+.button span {
+  color: #d75d48;
+  margin-left: 10px;
+  font-size: 18px;
+}
+.grid {
+  max-width: 1100px;
+  padding: 75px 8vw 110px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.card {
+  min-height: 260px;
+  padding: 27px;
+  background: #fbfaf7;
+  border: 1px solid rgba(16, 45, 43, 0.1);
+  position: relative;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 40px rgba(16, 45, 43, 0.09);
+}
+.icon {
+  color: #d75d48;
+  font-size: 24px;
+}
+.card:nth-child(2) .icon {
+  color: #e1ad4c;
+}
+.card:nth-child(3) .icon {
+  color: #5c9b74;
+}
+.card h2 {
+  font:
+    500 26px "Plus Jakarta Sans",
+    sans-serif;
+  margin: 42px 0 13px;
+}
+.card p {
+  color: #687572;
+  line-height: 1.75;
+  font-size: 12px;
+}
+.arrow {
+  position: absolute;
+  bottom: 22px;
+  right: 24px;
+  color: #d75d48;
+  font-size: 19px;
+}
+@media (max-width: 760px) {
+  .hero {
+    padding: 80px 8vw 70px;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    padding-top: 45px;
+  }
+  .card {
+    min-height: 220px;
+  }
+  .card h2 {
+    margin-top: 30px;
+  }
+}

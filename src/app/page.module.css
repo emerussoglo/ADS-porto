@@ -1,0 +1,816 @@
+.page {
+  --ink: #102d2b;
+  --muted: #687572;
+  --cream: #f7f3eb;
+  --paper: #fbfaf7;
+  --red: #d75d48;
+  --gold: #e1ad4c;
+  --green: #5c9b74;
+  color: var(--ink);
+  background: var(--paper);
+  overflow: hidden;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+.page > .navbar,
+.page > .footer {
+  display: none;
+}
+.brand,
+.navLinks button,
+.menuButton,
+.loginButton,
+.textButton,
+.arrowButton,
+.primaryButton,
+.event > button,
+.dots button,
+.modalClose,
+.heroDots button {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+.navbar {
+  height: 82px;
+  padding: 0 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(251, 250, 247, 0.92);
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 20;
+  border-bottom: 1px solid rgba(16, 45, 43, 0.08);
+}
+.brand,
+.footerBrand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-align: left;
+}
+.brand > span:last-child {
+  display: grid;
+  font-size: 13px;
+}
+.brand strong,
+.footerBrand strong {
+  font-size: 17px;
+  letter-spacing: 0.18em;
+}
+.brand small {
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.brandMark {
+  width: 39px;
+  height: 39px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  position: relative;
+  color: var(--gold);
+  font:
+    800 10px "Plus Jakarta Sans",
+    sans-serif;
+}
+.brandMark:after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(215, 93, 72, 0.6);
+  border-radius: 50%;
+}
+.brandMark span {
+  position: relative;
+  z-index: 1;
+}
+.navLinks {
+  display: flex;
+  gap: 30px;
+  margin-left: auto;
+  margin-right: 40px;
+}
+.navLinks button {
+  color: #50615d;
+  font-size: 12px;
+  padding: 8px 0;
+}
+.navLinks button:hover,
+.navLinks .activeLink {
+  color: var(--ink);
+}
+.navLinks .activeLink:after {
+  content: "";
+  display: block;
+  height: 2px;
+  background: var(--red);
+  width: 14px;
+  margin-top: 5px;
+}
+.loginButton {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 10px 14px;
+}
+.menuButton {
+  display: none;
+  font-size: 22px;
+}
+.hero {
+  min-height: 730px;
+  padding: 150px 9vw 90px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--cream);
+  isolation: isolate;
+  color: #fff;
+  overflow: hidden;
+}
+.heroSlides,
+.heroSlide,
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+}
+.heroSlides {
+  z-index: -3;
+  background: #102d2b;
+}
+.heroSlide {
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1.04);
+  transition:
+    opacity 1.2s ease,
+    transform 7s ease;
+}
+.heroSlideActive {
+  opacity: 1;
+  transform: scale(1);
+}
+.heroOverlay {
+  z-index: -2;
+  background: linear-gradient(
+    90deg,
+    rgba(8, 28, 27, 0.72),
+    rgba(8, 28, 27, 0.45),
+    rgba(8, 28, 27, 0.72)
+  );
+}
+.heroContent {
+  max-width: 650px;
+  z-index: 2;
+  text-align: center;
+  margin: 0 auto;
+}
+.heroContent .eyebrow,
+.heroContent .heroCopy {
+  color: rgba(255, 255, 255, 0.82);
+}
+.heroContent .eyebrow {
+  justify-content: center;
+}
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow span {
+  width: 28px;
+  height: 2px;
+  background: var(--red);
+  display: inline-block;
+}
+.heroTitle {
+  margin: 23px 0 20px;
+  font:
+    800 clamp(42px, 6vw, 78px)/1.03 "Plus Jakarta Sans",
+    sans-serif;
+  letter-spacing: -0.05em;
+  color: #fff;
+}
+.heroTitle em,
+.statement h2 span,
+.pathHeader h2 em,
+.agendaSection h2 em,
+.ctaSection h2 em,
+.valuesIntro h2 em {
+  color: var(--red);
+  font-style: italic;
+}
+.heroCopy {
+  max-width: 500px;
+  margin: 0 auto;
+  color: var(--muted);
+  line-height: 1.8;
+  font-size: 14px;
+}
+.heroActions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 32px;
+}
+.primaryButton {
+  background: var(--ink);
+  color: #fff;
+  padding: 16px 21px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  transition:
+    transform 0.2s,
+    background 0.2s,
+    box-shadow 0.2s;
+}
+.primaryButton:hover {
+  background: var(--red);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(215, 93, 72, 0.25);
+}
+.primaryButton i,
+.textButton i {
+  margin-right: 8px;
+}
+.textButton {
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 12px 16px;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.heroMeta {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 65px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.heroMeta b {
+  display: block;
+  color: #fff;
+  font-size: 21px;
+  letter-spacing: 0;
+  margin-bottom: 5px;
+}
+.heroDots {
+  position: absolute;
+  right: 8vw;
+  bottom: 35px;
+  display: flex;
+  gap: 8px;
+  z-index: 3;
+}
+.heroDots button {
+  width: 10px;
+  height: 10px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  background: transparent;
+  padding: 0;
+  transition: all 0.25s;
+}
+.heroDots .heroDotActive {
+  width: 34px;
+  border-radius: 999px;
+  background: var(--gold);
+  border-color: var(--gold);
+}
+.statement {
+  padding: 130px 14vw;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 80px;
+  background: var(--paper);
+}
+.sectionLabel {
+  color: var(--red);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.statement h2,
+.pathHeader h2,
+.agendaSection h2,
+.ctaSection h2 {
+  font:
+    800 clamp(36px, 4.5vw, 60px)/1.08 "Plus Jakarta Sans",
+    sans-serif;
+  letter-spacing: -0.05em;
+  margin-bottom: 22px;
+}
+.statement p {
+  max-width: 570px;
+  color: var(--muted);
+  line-height: 1.9;
+  font-size: 14px;
+}
+.arrowButton {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 0 0 9px;
+  border-bottom: 1px solid var(--red);
+  margin-top: 28px;
+}
+.arrowButton span {
+  margin-left: 25px;
+  color: var(--red);
+}
+.valuesSection {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 115px 9vw;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 80px;
+}
+.valuesIntro .eyebrow {
+  color: #b4c2bc;
+}
+.valuesIntro h2 {
+  font:
+    800 clamp(36px, 4vw, 56px)/1.08 "Plus Jakarta Sans",
+    sans-serif;
+  margin-top: 28px;
+}
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+.valueCard {
+  min-height: 315px;
+  padding: 25px;
+  position: relative;
+  background: #153a36;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  transition:
+    transform 0.25s,
+    background 0.25s;
+}
+.valueCard:hover {
+  transform: translateY(-8px);
+  background: #1e4c46;
+}
+.valueCard > span {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+}
+.valueCard i {
+  font-size: 24px;
+  margin: 52px 0 22px;
+}
+.valueCard h3 {
+  font:
+    800 24px "Plus Jakarta Sans",
+    sans-serif;
+}
+.valueCard p {
+  color: #a4b8b0;
+  font-size: 12px;
+  line-height: 1.7;
+  margin-top: 13px;
+}
+.valueCard.rouge i {
+  color: var(--red);
+}
+.valueCard.or i {
+  color: var(--gold);
+}
+.valueCard.vert i {
+  color: #76c795;
+}
+.pathSection,
+.agendaSection {
+  padding: 120px 9vw;
+}
+.pathSection {
+  background: #efe7da;
+}
+.pathHeader,
+.sectionTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 40px;
+}
+.pathHeader > p {
+  max-width: 370px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--muted);
+  margin-bottom: 25px;
+}
+.pathRail {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-top: 85px;
+  position: relative;
+}
+.railLine {
+  position: absolute;
+  top: 17px;
+  left: 7%;
+  right: 7%;
+  border-top: 1px dashed rgba(16, 45, 43, 0.4);
+}
+.pathItem {
+  position: relative;
+}
+.pathNumber {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  position: relative;
+  z-index: 1;
+}
+.pathItem:nth-child(3) .pathNumber {
+  background: var(--gold);
+}
+.pathItem:nth-child(4) .pathNumber {
+  background: var(--green);
+}
+.pathItem p {
+  margin-top: 38px;
+  color: var(--muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+.pathItem h3 {
+  font:
+    800 26px "Plus Jakarta Sans",
+    sans-serif;
+  margin: 11px 0;
+}
+.pathItem > span {
+  color: var(--red);
+  font-size: 11px;
+  font-weight: 800;
+}
+.agendaSection {
+  background: var(--paper);
+}
+.events {
+  margin-top: 60px;
+  border-top: 1px solid rgba(16, 45, 43, 0.16);
+}
+.event {
+  padding: 25px 0;
+  display: grid;
+  grid-template-columns: 120px 1fr 40px;
+  align-items: center;
+  border-bottom: 1px solid rgba(16, 45, 43, 0.16);
+}
+.eventDate {
+  display: flex;
+  gap: 7px;
+  align-items: baseline;
+}
+.eventDate strong {
+  font:
+    800 40px "Plus Jakarta Sans",
+    sans-serif;
+}
+.eventDate span,
+.event small {
+  color: var(--red);
+  font-weight: 800;
+  font-size: 10px;
+}
+.event small {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+.event h3 {
+  font:
+    800 22px "Plus Jakarta Sans",
+    sans-serif;
+  margin: 6px 0;
+}
+.event p {
+  color: var(--muted);
+  font-size: 11px;
+}
+.event > button {
+  font-size: 18px;
+  color: var(--red);
+}
+.quoteSection {
+  padding: 130px 12vw;
+  background: var(--red);
+  color: #fff8ed;
+  text-align: center;
+}
+.quoteBadge {
+  font:
+    800 90px "Plus Jakarta Sans",
+    sans-serif;
+  height: 75px;
+  color: var(--gold);
+}
+.quote {
+  max-width: 800px;
+  margin: auto;
+  font:
+    italic 700 30px/1.35 "Plus Jakarta Sans",
+    sans-serif;
+}
+.quoteAuthor {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 33px auto;
+  text-align: left;
+}
+.avatar {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--ink);
+  background: var(--gold);
+  font-weight: 800;
+}
+.quoteAuthor b,
+.quoteAuthor small {
+  display: block;
+  font-size: 11px;
+}
+.quoteAuthor small {
+  opacity: 0.7;
+  margin-top: 4px;
+}
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.dots button {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  padding: 0;
+}
+.dots .dotActive {
+  width: 22px;
+  border-radius: 5px;
+  background: var(--gold);
+}
+.ctaSection {
+  padding: 105px 14vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 40px;
+  background: #e9efe8;
+}
+.ctaSection > div > p:last-child {
+  color: var(--muted);
+  max-width: 420px;
+  line-height: 1.8;
+  font-size: 13px;
+}
+.footer {
+  padding: 42px 9vw 30px;
+  background: var(--ink);
+  color: var(--paper);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 30px;
+}
+.footerBrand p {
+  margin: 4px 0 0;
+  color: #9db1a9;
+  font-size: 11px;
+}
+.socials {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.socials a {
+  color: var(--gold);
+  border: 1px solid rgba(225, 173, 76, 0.5);
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 10px;
+}
+.copyright {
+  text-align: right;
+  color: #78918a;
+  font-size: 10px;
+}
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(16, 45, 43, 0.72);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+.loginPage {
+  background:
+    linear-gradient(90deg, rgba(16, 45, 43, 0.86), rgba(16, 45, 43, 0.4)),
+    url("/img/hero-2.jpg") center/cover;
+}
+.modal {
+  width: min(430px, 100%);
+  padding: 40px;
+  background: var(--paper);
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 24px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+}
+.modal h2 {
+  font:
+    800 34px "Plus Jakarta Sans",
+    sans-serif;
+  margin: 20px 0 10px;
+}
+.modal > p:not(.eyebrow) {
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 13px;
+}
+.modal input {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #d9ded8;
+  border-radius: 12px;
+  margin-top: 12px;
+  background: #fff;
+  font: inherit;
+  font-size: 12px;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.modal input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px rgba(225, 173, 76, 0.16);
+}
+.modal .primaryButton {
+  margin-top: 17px;
+  width: 100%;
+}
+.modalClose {
+  position: absolute;
+  right: 18px;
+  top: 13px;
+  font-size: 25px;
+  color: var(--muted);
+}
+@media (max-width: 900px) {
+  .navbar {
+    padding: 0 6vw;
+  }
+  .hero {
+    min-height: 780px;
+    padding: 130px 8vw 110px;
+  }
+  .heroMeta {
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  .statement,
+  .valuesSection {
+    grid-template-columns: 1fr;
+    gap: 45px;
+    padding: 85px 8vw;
+  }
+  .valuesGrid {
+    grid-template-columns: 1fr;
+  }
+  .valueCard {
+    min-height: 235px;
+  }
+  .valueCard i {
+    margin: 30px 0 14px;
+  }
+  .pathSection,
+  .agendaSection {
+    padding: 85px 8vw;
+  }
+  .pathHeader,
+  .sectionTop,
+  .ctaSection {
+    display: block;
+  }
+  .pathHeader > p {
+    margin-top: 25px;
+  }
+  .pathRail {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    margin-top: 55px;
+    padding-left: 10px;
+  }
+  .railLine {
+    top: 15px;
+    bottom: 15px;
+    left: 27px;
+    right: auto;
+    border-top: 0;
+    border-left: 1px dashed rgba(16, 45, 43, 0.4);
+  }
+  .pathItem {
+    padding-left: 55px;
+  }
+  .pathNumber {
+    position: absolute;
+    left: 0;
+    top: -1px;
+  }
+  .pathItem p {
+    margin-top: 0;
+  }
+  .sectionTop .arrowButton {
+    margin-top: 25px;
+  }
+  .event {
+    grid-template-columns: 75px 1fr 25px;
+  }
+  .event h3 {
+    font-size: 18px;
+  }
+  .quoteSection {
+    padding: 90px 8vw;
+  }
+  .quote {
+    font-size: 25px;
+  }
+  .ctaSection {
+    padding: 80px 8vw;
+  }
+  .ctaSection .primaryButton {
+    margin-top: 27px;
+  }
+  .footer {
+    grid-template-columns: 1fr;
+  }
+  .copyright {
+    text-align: left;
+  }
+}
+@media (max-width: 520px) {
+  .brand small {
+    display: none;
+  }
+  .heroTitle {
+    font-size: 43px;
+  }
+  .eventDate strong {
+    font-size: 30px;
+  }
+  .eventDate {
+    display: block;
+  }
+  .eventDate span {
+    display: block;
+  }
+  .modal {
+    padding: 32px 24px;
+  }
+}

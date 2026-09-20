@@ -1,0 +1,256 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+.shell {
+  min-height: 100vh;
+  background: #fbfaf7;
+  color: #102d2b;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+@media (max-width: 800px) {
+  .header {
+    padding: 0 6vw;
+  }
+  .nav {
+    display: none;
+    position: absolute;
+    top: 82px;
+    left: 0;
+    right: 0;
+    padding: 22px 8vw 28px;
+    margin: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    background: #fbfaf7;
+    border-bottom: 1px solid #ddd;
+  }
+  .nav.open {
+    display: flex;
+  }
+  .nav a {
+    padding: 4px 0;
+  }
+  .nav .join {
+    text-align: center;
+  }
+  .menu {
+    display: block;
+    margin-left: 18px;
+  }
+  .footer {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .footerLinks,
+  .socials {
+    flex-wrap: wrap;
+  }
+  .footer p {
+    grid-column: auto;
+  }
+}
+.header {
+  height: 82px;
+  padding: 0 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(251, 250, 247, 0.92);
+  backdrop-filter: blur(16px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid rgba(16, 45, 43, 0.08);
+}
+.brand,
+.footerBrand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: inherit;
+  text-decoration: none;
+}
+.brand strong,
+.footerBrand strong {
+  display: block;
+  font-size: 17px;
+  letter-spacing: 0.18em;
+}
+.brand small,
+.footerBrand small {
+  display: block;
+  color: #687572;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+.mark {
+  width: 39px;
+  height: 39px;
+  border: 1px solid #e1ad4c;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #e1ad4c;
+  font:
+    800 10px "Plus Jakarta Sans",
+    sans-serif;
+  position: relative;
+}
+.mark:after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(215, 93, 72, 0.6);
+  border-radius: 50%;
+}
+.nav {
+  display: flex;
+  gap: 29px;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 38px;
+}
+.nav a,
+.login {
+  color: #50615d;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 10px 14px;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.login:hover {
+  background: #e9efe8;
+}
+.nav a i,
+.login i,
+.join i,
+.footer a i {
+  margin-right: 7px;
+}
+.nav a:hover,
+.login:hover {
+  color: #d75d48;
+}
+.nav .join {
+  padding: 12px 16px;
+  color: #fff;
+  background: #102d2b;
+  border-radius: 999px;
+  transition:
+    transform 0.2s,
+    background 0.2s,
+    box-shadow 0.2s;
+}
+.nav .join:hover {
+  color: #fff;
+  background: #d75d48;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(215, 93, 72, 0.25);
+}
+.mobileMember {
+  display: none;
+}
+.nav .join span,
+.login span {
+  color: #d75d48;
+  margin-left: 7px;
+}
+.actions {
+  display: flex;
+  align-items: center;
+}
+.menu {
+  display: none;
+  border: 0;
+  background: none;
+  font-size: 20px;
+  color: #102d2b;
+}
+.footer {
+  padding: 44px 8vw 28px;
+  background: #102d2b;
+  color: #fbfaf7;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 35px;
+  align-items: center;
+}
+.footerBrand small {
+  color: #9db1a9;
+}
+.footerLinks,
+.socials {
+  display: flex;
+  gap: 18px;
+}
+.footer a {
+  color: #c8d2cd;
+  text-decoration: none;
+  font-size: 11px;
+}
+.footer a:hover {
+  color: #e1ad4c;
+}
+.footer p {
+  grid-column: 1/-1;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 20px;
+  margin: 0;
+  color: #78918a;
+  font-size: 10px;
+}
+@media (max-width: 800px) {
+  .header {
+    padding: 0 6vw;
+  }
+  .nav {
+    display: none;
+    position: absolute;
+    top: 82px;
+    left: 0;
+    right: 0;
+    padding: 22px 8vw 28px;
+    margin: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    background: #fbfaf7;
+    border-bottom: 1px solid #ddd;
+  }
+  .nav.open {
+    display: flex;
+  }
+  .nav a {
+    padding: 4px 0;
+  }
+  .nav .join {
+    text-align: center;
+  }
+  .desktopMember {
+    display: none;
+  }
+  .mobileMember {
+    display: block;
+  }
+  .menu {
+    display: block;
+    margin-left: 18px;
+  }
+  .footer {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .footerLinks,
+  .socials {
+    flex-wrap: wrap;
+  }
+  .footer p {
+    grid-column: auto;
+  }
+}
