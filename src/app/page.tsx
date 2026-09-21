@@ -54,6 +54,7 @@ export default function HomePage() {
   const [session, setSession] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [heroSlide, setHeroSlide] = useState(0);
+  const [stats, setStats] = useState([0, 0, 0]);
 
   useEffect(() => {
     const timer = window.setInterval(
@@ -61,6 +62,27 @@ export default function HomePage() {
       6500,
     );
     return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const targets = [10, 150, 12];
+    const started = performance.now();
+    const duration = 1200;
+    const frame = (now: number) => {
+      const progress = Math.min((now - started) / duration, 1);
+      setStats(targets.map((target) => Math.round(target * progress)));
+      if (progress < 1) requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add("is-revealed")),
+      { threshold: 0.14 },
+    );
+    document.querySelectorAll("[data-reveal]").forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
   }, []);
 
   const scrollTo = (id: string) => {
@@ -156,13 +178,13 @@ export default function HomePage() {
           </div>
           <div className={styles.heroMeta}>
             <span>
-              <b>10</b> annees de presence
+              <b>{stats[0]}</b> annees de presence
             </span>
             <span>
-              <b>+150</b> jeunes accompagnes
+              <b>+{stats[1]}</b> jeunes accompagnes
             </span>
             <span>
-              <b>12</b> paroisses
+              <b>{stats[2]}</b> paroisses
             </span>
           </div>
         </div>
@@ -178,8 +200,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={styles.statement} id="mission">
-        <div className={styles.sectionLabel}>01 / L’esprit ADS</div>
+      <section className={styles.statement} id="mission" data-reveal>
+        <div className={styles.statementVisual}><div className={styles.sectionLabel}>01 / L’esprit ADS</div><img className={styles.statementImage} src="/img/hero-1.jpg" alt="Jeunes du mouvement ADS" /></div>
         <div>
           <h2>
             Une foi qui se vit
@@ -200,7 +222,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={styles.valuesSection}>
+      <section className={styles.valuesSection} data-reveal>
         <div className={styles.valuesIntro}>
           <p className={styles.eyebrow}>
             <span /> Nos fondations
@@ -247,7 +269,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={styles.pathSection} id="parcours">
+      <section className={styles.pathSection} id="parcours" data-reveal>
         <div className={styles.pathHeader}>
           <div>
             <p className={styles.eyebrow}>
@@ -281,7 +303,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={styles.agendaSection} id="agenda">
+      <section className={styles.agendaSection} id="agenda" data-reveal>
         <div className={styles.sectionTop}>
           <div>
             <p className={styles.eyebrow}>
@@ -319,7 +341,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={styles.quoteSection}>
+      <section className={styles.quoteSection} data-reveal>
         <div className={styles.quoteBadge}>“</div>
         <p className={styles.quote}>{testimonials[activeTestimonial].quote}</p>
         <div className={styles.quoteAuthor}>
@@ -343,7 +365,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={styles.ctaSection} id="contact">
+      <section className={styles.ctaSection} id="contact" data-reveal>
         <div>
           <p className={styles.eyebrow}>
             <span /> A toi de jouer

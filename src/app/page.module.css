@@ -304,6 +304,7 @@
   gap: 80px;
   background: var(--paper);
 }
+
 .sectionLabel {
   color: var(--red);
   font-size: 10px;
@@ -327,6 +328,7 @@
   line-height: 1.9;
   font-size: 14px;
 }
+.statementVisual { display:flex; flex-direction:column; gap:26px; }.statementImage { width:100%; height:290px; object-fit:cover; border-radius:16px; display:block; }
 .arrowButton {
   font-size: 12px;
   font-weight: 800;
@@ -655,9 +657,9 @@
 .modal {
   width: min(430px, 100%);
   padding: 40px;
-  background: var(--paper);
+  background: #ffffff;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.55);
+  border: 1px solid #d7e0dc;
   border-radius: 24px;
   box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
 }
@@ -676,7 +678,7 @@
   display: block;
   width: 100%;
   padding: 14px;
-  border: 1px solid #d9ded8;
+  border: 2px solid #c5d2cc;
   border-radius: 12px;
   margin-top: 12px;
   background: #fff;
@@ -688,7 +690,7 @@
     box-shadow 0.2s;
 }
 .modal input:focus {
-  border-color: var(--gold);
+  border-color: #d75d48;
   box-shadow: 0 0 0 4px rgba(225, 173, 76, 0.16);
 }
 .modal .primaryButton {

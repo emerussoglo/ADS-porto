@@ -13,6 +13,7 @@ const tabs = [
   ["documents", "Mes documents", "fa-file-lines"],
   ["messages", "Messages admin", "fa-envelope"],
   ["merits", "Mes mérites", "fa-medal"],
+  ["sanctions", "Mes sanctions", "fa-scale-balanced"],
 ];
 
 export default function PrivateSpacePage() {
@@ -64,9 +65,9 @@ export default function PrivateSpacePage() {
             <i className="fa-solid fa-house" /> Retour au site
           </Link>
           <button
-            onClick={() => {
-              document.cookie = "user_session=; Max-Age=0; path=/";
-              window.location.href = "/login";
+            onClick={async () => {
+              await fetch("/api/auth/logout", { method: "POST" });
+              window.location.assign("/login");
             }}
           >
             <i className="fa-solid fa-right-from-bracket" /> Déconnexion
@@ -169,7 +170,15 @@ export default function PrivateSpacePage() {
             </div>
           </article>
         )}
-        {active !== "dashboard" && active !== "profile" && (
+        {active === "sanctions" && (
+          <article className={styles.panel}>
+            <h3>Historique des sanctions</h3>
+            <p className={styles.empty}>
+              <i className="fa-solid fa-circle-check" /> Aucune sanction enregistrée pour le moment. Les décisions et leur suivi seront visibles ici lorsqu&apos;ils seront ajoutés par l&apos;administration.
+            </p>
+          </article>
+        )}
+        {active !== "dashboard" && active !== "profile" && active !== "sanctions" && (
           <article className={styles.panel}>
             <h3>{current[1]}</h3>
             <p className={styles.empty}>

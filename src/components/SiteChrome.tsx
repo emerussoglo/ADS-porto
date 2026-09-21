@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import styles from "./SiteChrome.module.css";
 
@@ -18,6 +19,10 @@ export default function SiteChrome({
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const isAppArea = pathname.startsWith("/espace-prive") || pathname.startsWith("/admin");
+
+  if (isAppArea) return <>{children}</>;
 
   return (
     <div className={styles.shell}>
