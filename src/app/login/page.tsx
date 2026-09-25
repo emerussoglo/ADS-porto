@@ -9,15 +9,19 @@ export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+
     if (!form.get("identifier") || !form.get("password")) {
       setError("Entre ton identifiant et ton mot de passe.");
       return;
     }
+
     setLoading(true);
     setError("");
+
     const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -26,14 +30,18 @@ export default function LoginPage() {
         password: form.get("password"),
       }),
     });
+
     if (!response.ok) {
       const result = (await response.json()) as { error?: string };
       setError(result.error || "Connexion impossible.");
       setLoading(false);
       return;
     }
-    router.push("/espace-prive");
+
+    const result = (await response.json()) as { isAdmin?: boolean };
+    router.push(result.isAdmin ? "/admin" : "/espace-prive");
   };
+
   return (
     <main
       className={`${styles.modalBackdrop} ${styles.loginPage}`}
@@ -53,7 +61,7 @@ export default function LoginPage() {
         </p>
         <input
           name="identifier"
-          placeholder="Identifiant ADS"
+          placeholder="Identifiant ADS ou email"
           autoComplete="username"
         />
         <input

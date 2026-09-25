@@ -70,7 +70,8 @@
   display: grid;
   gap: 5px;
 }
-.nav button {
+.nav button,
+.nav a {
   border: 0;
   background: transparent;
   color: #a9bbb2;
@@ -82,12 +83,15 @@
   font: 600 11px inherit;
   border-radius: 10px;
   cursor: pointer;
+  text-decoration: none;
 }
-.nav button i {
+.nav button i,
+.nav a i {
   width: 18px;
   text-align: center;
 }
 .nav button:hover,
+.nav a:hover,
 .nav .active {
   color: #102d2b;
   background: #e1ad4c;

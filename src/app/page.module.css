@@ -328,7 +328,18 @@
   line-height: 1.9;
   font-size: 14px;
 }
-.statementVisual { display:flex; flex-direction:column; gap:26px; }.statementImage { width:100%; height:290px; object-fit:cover; border-radius:16px; display:block; }
+.statementVisual {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+.statementImage {
+  width: 100%;
+  height: 290px;
+  object-fit: cover;
+  border-radius: 16px;
+  display: block;
+}
 .arrowButton {
   font-size: 12px;
   font-weight: 800;
@@ -647,6 +658,7 @@
   background: rgba(16, 45, 43, 0.72);
   display: grid;
   place-items: center;
+  overflow-y: auto;
   padding: 20px;
 }
 .loginPage {
@@ -662,6 +674,7 @@
   border: 1px solid #d7e0dc;
   border-radius: 24px;
   box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+  margin: auto;
 }
 .modal h2 {
   font:
