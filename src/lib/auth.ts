@@ -9,7 +9,7 @@ export function hashPassword(password: string) {
     .pbkdf2Sync(password, salt, 100_000, 64, "sha512")
     .toString("hex");
   return `pbkdf2$100000$${salt}$${hash}`;
-}
+} 
 
 export function verifyPassword(password: string, storedHash: string) {
   if (!storedHash || !storedHash.startsWith("pbkdf2$")) {
