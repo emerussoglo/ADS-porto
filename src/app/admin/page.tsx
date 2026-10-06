@@ -31,6 +31,22 @@ type AdminSummary = {
     isPrincipal: boolean | null;
     scope: string | null;
   }>;
+  members: Array<{
+    userId: string;
+    username: string;
+    email: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    status: string;
+  }>;
+};
+
+type AdminTraining = {
+  id: string;
+  title: string;
+  summary: string;
+  status: "draft" | "published";
+  priceCfa: number;
 };
 
 export default function AdminPage() {
@@ -52,10 +68,20 @@ export default function AdminPage() {
       lastName: string | null;
     }>
   >([]);
-  const [messageRecipient, setMessageRecipient] = useState("");
+  const [messageRecipient, setMessageRecipient] = useState("all");
   const [messageTitle, setMessageTitle] = useState("");
   const [messageContent, setMessageContent] = useState("");
   const [messageSending, setMessageSending] = useState(false);
+  const [trainingTitle, setTrainingTitle] = useState("");
+  const [trainingSummary, setTrainingSummary] = useState("");
+  const [trainingCoverUrl, setTrainingCoverUrl] = useState("");
+  const [trainingVideoUrl, setTrainingVideoUrl] = useState("");
+  const [trainingPrice, setTrainingPrice] = useState("0");
+  const [trainingStatus, setTrainingStatus] = useState<"draft" | "published">(
+    "published",
+  );
+  const [trainingSaving, setTrainingSaving] = useState(false);
+  const [trainings, setTrainings] = useState<AdminTraining[]>([]);
 
   const sections = [
     "Vue d’ensemble",
@@ -92,18 +118,77 @@ export default function AdminPage() {
           }>;
         };
         setMessageMembers(membersData.members);
-        if (membersData.members.length > 0 && !messageRecipient) {
-          setMessageRecipient(membersData.members[0].id);
+        if (membersData.members.length > 0) {
+          setMessageRecipient(
+            (current) => current || membersData.members[0].id,
+          );
         }
       }
-      if (data.assignedUsers.length > 0 && !selectedMemberId) {
-        setSelectedMemberId(data.assignedUsers[0].userId);
+      if (data.members.length > 0) {
+        setSelectedMemberId((current) => current || data.members[0].userId);
       }
       setLoading(false);
     };
 
     loadSummary();
-  }, [selectedMemberId]);
+  }, []);
+
+  const loadTrainings = async () => {
+    const response = await fetch("/api/admin/trainings", { cache: "no-store" });
+    const result = (await response.json()) as {
+      trainings?: AdminTraining[];
+      error?: string;
+    };
+    if (!response.ok) {
+      setError(result.error || "Impossible de charger les formations.");
+      return;
+    }
+    setTrainings(result.trainings ?? []);
+  };
+
+  const handleCreateTraining = async () => {
+    const priceCfa = Number(trainingPrice);
+    if (!trainingTitle.trim() || !trainingSummary.trim() || !Number.isSafeInteger(priceCfa) || priceCfa < 0) {
+      setError("Renseigne le titre, les informations et un prix valide.");
+      return;
+    }
+
+    setTrainingSaving(true);
+    setError("");
+    setInfo("");
+    const response = await fetch("/api/admin/trainings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: trainingTitle,
+        summary: trainingSummary,
+        coverUrl: trainingCoverUrl || undefined,
+        videoUrl: trainingVideoUrl || undefined,
+        priceCfa,
+        status: trainingStatus,
+      }),
+    });
+    const result = (await response.json()) as {
+      error?: string;
+      notifiedMembers?: number;
+    };
+    setTrainingSaving(false);
+    if (!response.ok) {
+      setError(result.error || "Impossible d’enregistrer la formation.");
+      return;
+    }
+    setTrainingTitle("");
+    setTrainingSummary("");
+    setTrainingCoverUrl("");
+    setTrainingVideoUrl("");
+    setTrainingPrice("0");
+    setInfo(
+      trainingStatus === "published"
+        ? `Formation publiée. ${result.notifiedMembers ?? 0} membre(s) ont été notifiés.`
+        : "Formation enregistrée en brouillon.",
+    );
+    await loadTrainings();
+  };
 
   const handleAssign = async () => {
     if (!selectedMemberId || !selectedRole) {
@@ -167,7 +252,7 @@ export default function AdminPage() {
     setInfo("Message envoyé avec succès.");
   };
 
-  const members = (summary?.assignedUsers ?? []).filter((member) =>
+  const filteredMembers = (summary?.members ?? []).filter((member) =>
     `${member.firstName ?? ""} ${member.lastName ?? ""} ${member.username} ${member.email ?? ""}`
       .toLowerCase()
       .includes(query.toLowerCase()),
@@ -202,7 +287,12 @@ export default function AdminPage() {
         <nav className={styles.nav}>
           {sections.map((section) => (
             <button
-              onClick={() => setTab(section)}
+              onClick={() => {
+                setTab(section);
+                setError("");
+                setInfo("");
+                if (section === "Formations") void loadTrainings();
+              }}
               className={tab === section ? styles.active : ""}
               key={section}
             >
@@ -229,6 +319,94 @@ export default function AdminPage() {
               />
             )}
 
+            {tab === "Formations" && (
+              <div className={styles.editor}>
+                <h3>Ajouter une formation</h3>
+                <p>
+                  Une formation publiée est enregistrée dans ADS et déclenche une
+                  notification dans l’espace de chaque membre actif.
+                </p>
+                <input
+                  value={trainingTitle}
+                  onChange={(event) => setTrainingTitle(event.target.value)}
+                  placeholder="Titre de la formation"
+                  aria-label="Titre de la formation"
+                />
+                <textarea
+                  value={trainingSummary}
+                  onChange={(event) => setTrainingSummary(event.target.value)}
+                  placeholder="Informations, objectifs et détails pratiques"
+                  aria-label="Informations de la formation"
+                  rows={4}
+                />
+                <input
+                  type="url"
+                  value={trainingCoverUrl}
+                  onChange={(event) => setTrainingCoverUrl(event.target.value)}
+                  placeholder="Lien HTTPS de l’image (facultatif)"
+                  aria-label="Lien de l’image de couverture"
+                />
+                <input
+                  type="url"
+                  value={trainingVideoUrl}
+                  onChange={(event) => setTrainingVideoUrl(event.target.value)}
+                  placeholder="Lien HTTPS de la vidéo (facultatif)"
+                  aria-label="Lien de la vidéo"
+                />
+                <div className={styles.editorFields}>
+                  <label>
+                    Prix en FCFA
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={trainingPrice}
+                      onChange={(event) => setTrainingPrice(event.target.value)}
+                    />
+                  </label>
+                  <label>
+                    Publication
+                    <select
+                      value={trainingStatus}
+                      onChange={(event) =>
+                        setTrainingStatus(event.target.value as "draft" | "published")
+                      }
+                    >
+                      <option value="published">Publier et notifier les membres</option>
+                      <option value="draft">Enregistrer comme brouillon</option>
+                    </select>
+                  </label>
+                </div>
+                <div className={styles.actions}>
+                  <button
+                    className={styles.primary}
+                    onClick={handleCreateTraining}
+                    disabled={trainingSaving}
+                  >
+                    {trainingSaving ? "Enregistrement..." : "Enregistrer la formation"}
+                  </button>
+                </div>
+                {error && <p className={styles.error}>{error}</p>}
+                {info && <p className={styles.success}>{info}</p>}
+                <h3 className={styles.listTitle}>Formations enregistrées</h3>
+                {trainings.length ? (
+                  trainings.map((training) => (
+                    <div className={styles.trainingRow} key={training.id}>
+                      <div>
+                        <strong>{training.title}</strong>
+                        <small>{training.summary}</small>
+                      </div>
+                      <span className={styles.badge}>
+                        {training.status === "published" ? "Publié" : "Brouillon"}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p className={styles.muted}>Aucune formation enregistrée.</p>
+                )}
+              </div>
+            )}
+
             {tab === "Administrateurs" && (
               <div style={{ display: "grid", gap: 12, marginTop: 16 }}>
                 <p className={styles.warning}>
@@ -237,22 +415,15 @@ export default function AdminPage() {
                   autres accès sont limités à une page ou une section.
                 </p>
 
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, minmax(0,1fr))",
-                    gap: 12,
-                  }}
-                >
+                <div className={styles.adminFields}>
                   <select
                     value={selectedMemberId}
                     onChange={(e) => setSelectedMemberId(e.target.value)}
                   >
                     <option value="">Choisir un membre</option>
-                    {summary.assignedUsers.map((member) => (
+                    {summary.members.map((member) => (
                       <option key={member.userId} value={member.userId}>
-                        {member.firstName || member.username}{" "}
-                        {member.lastName || ""}
+                        {member.firstName || member.username} {member.lastName || ""}
                       </option>
                     ))}
                   </select>
@@ -302,7 +473,7 @@ export default function AdminPage() {
                   value={messageRecipient}
                   onChange={(event) => setMessageRecipient(event.target.value)}
                 >
-                  <option value="">Choisir un utilisateur</option>
+                  <option value="all">Tous les membres actifs</option>
                   {messageMembers.map((member) => (
                     <option key={member.id} value={member.id}>
                       {member.firstName || member.username}{" "}
@@ -341,26 +512,22 @@ export default function AdminPage() {
           </div>
 
           <div className={styles.table}>
+            {tab !== "Membres" && tab !== "Administrateurs" && (
+              <p className={styles.muted}>
+                Cette rubrique ne contient pas encore de données publiées.
+              </p>
+            )}
+            {tab === "Membres" && filteredMembers.length === 0 && (
+              <p className={styles.muted}>Aucun membre ne correspond à cette recherche.</p>
+            )}
+            {tab === "Administrateurs" && summary.assignedUsers.length === 0 && (
+              <p className={styles.muted}>Aucun rôle administrateur n’est attribué.</p>
+            )}
             {(tab === "Membres"
-              ? members
+              ? filteredMembers
               : tab === "Administrateurs"
                 ? summary.assignedUsers
-                : [
-                    [
-                      tab === "À propos"
-                        ? "Présentation du mouvement"
-                        : `Contenu ${tab}`,
-                      "Dernière mise à jour",
-                      "Administration ADS",
-                      "Brouillon",
-                    ],
-                    [
-                      "Élément publié",
-                      "À planifier",
-                      "Responsable ADS",
-                      "Actif",
-                    ],
-                  ]
+                : []
             ).map((row, index) => {
               if (tab === "Administrateurs") {
                 const admin = row as {
@@ -390,6 +557,26 @@ export default function AdminPage() {
                     <small>{admin.scope || "all"}</small>
                     <span className={styles.badge}>
                       {admin.isPrincipal ? "Principal" : "Section"}
+                    </span>
+                  </div>
+                );
+              }
+
+              if (tab === "Membres") {
+                const member = row as AdminSummary["members"][number];
+                return (
+                  <div className={styles.row} key={member.userId}>
+                    <div>
+                      <strong>
+                        {member.firstName || member.username}{" "}
+                        {member.lastName || ""}
+                      </strong>
+                      <small>{member.username}</small>
+                    </div>
+                    <small>{member.email || "—"}</small>
+                    <small>{member.status}</small>
+                    <span className={styles.badge}>
+                      {member.status === "active" ? "Actif" : member.status}
                     </span>
                   </div>
                 );

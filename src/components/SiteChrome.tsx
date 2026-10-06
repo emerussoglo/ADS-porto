@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -28,7 +29,14 @@ export default function SiteChrome({
     <div className={styles.shell}>
       <header className={styles.header}>
         <Link href="/" className={styles.brand} onClick={() => setOpen(false)}>
-          <span className={styles.mark}>ADS</span>
+          <Image
+            className={styles.brandLogo}
+            src="/img/logo.jpeg"
+            alt="Logo ADS"
+            width={42}
+            height={42}
+            priority
+          />
           <span>
             <strong>ADS</strong>
             <small>Fraternité, Jeunes Leaders</small>
@@ -78,7 +86,13 @@ export default function SiteChrome({
       {children}
       <footer className={styles.footer}>
         <div className={styles.footerBrand}>
-          <span className={styles.mark}>ADS</span>
+          <Image
+            className={styles.brandLogo}
+            src="/img/logo.jpeg"
+            alt="Logo ADS"
+            width={42}
+            height={42}
+          />
           <div>
             <strong>ADS</strong>
             <small>Fraternité, Jeunes Leaders</small>

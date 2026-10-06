@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 
@@ -98,9 +100,13 @@ export default function HomePage() {
           onClick={() => scrollTo("accueil")}
           aria-label="Retour en haut"
         >
-          <span className={styles.brandMark}>
-            <span>ADS</span>
-          </span>
+          <Image
+            className={styles.brandMark}
+            src="/img/logo.jpeg"
+            alt="Logo ADS"
+            width={42}
+            height={42}
+          />
           <span>
             <strong>ADS</strong>
             <small>Fraternite, Jeunes Leaders</small>
@@ -169,12 +175,9 @@ export default function HomePage() {
               <i className="fa-solid fa-user-plus" /> Rejoindre le
               mouvement{" "}
             </button>
-            <button
-              className={styles.textButton}
-              onClick={() => scrollTo("mission")}
-            >
+            <Link className={styles.textButton} href="/about">
               <i className="fa-solid fa-compass" /> Decouvrir ADS
-            </button>
+            </Link>
           </div>
           <div className={styles.heroMeta}>
             <span>
@@ -201,7 +204,7 @@ export default function HomePage() {
       </section>
 
       <section className={styles.statement} id="mission" data-reveal>
-        <div className={styles.statementVisual}><div className={styles.sectionLabel}>01 / L’esprit ADS</div><img className={styles.statementImage} src="/img/hero-1.jpg" alt="Jeunes du mouvement ADS" /></div>
+        <div className={styles.statementVisual}><div className={styles.sectionLabel}>01 / L’esprit ADS</div><Image className={styles.statementImage} src="/img/hero-1.jpg" alt="Jeunes du mouvement ADS" width={700} height={480} /></div>
         <div>
           <h2>
             Une foi qui se vit
@@ -213,12 +216,9 @@ export default function HomePage() {
             un chemin de foi, de service et de leadership. Ici, la fraternite
             n’est pas un mot : c’est une maniere d’agir.
           </p>
-          <button
-            className={styles.arrowButton}
-            onClick={() => scrollTo("parcours")}
-          >
-            Notre histoire <span>→</span>
-          </button>
+          <Link className={styles.arrowButton} href="/about">
+            À propos du groupe <span>→</span>
+          </Link>
         </div>
       </section>
 
@@ -282,20 +282,21 @@ export default function HomePage() {
             </h2>
           </div>
           <p>
-            Chaque age a son rythme, chaque etape sa responsabilite. ADS t’aide
-            a trouver ta voix et a la mettre au service de la communaute.
+            Quel que soit ton âge, tu commences au niveau Minime. La progression
+            vers Junior ou un niveau supérieur dépend de ton investissement, de
+            ta sagesse et des évaluations des responsables.
           </p>
         </div>
         <div className={styles.pathRail}>
           <span className={styles.railLine} />
           {[
-            ["01", "Minime", "Decouvrir", "6 — 11 ans"],
-            ["02", "Cadet", "S’engager", "12 — 15 ans"],
-            ["03", "Junior / Noyau", "Transmettre", "16 ans et +"],
-          ].map(([num, title, verb, age]) => (
+            ["01", "Minime", "Commencer", "Niveau de départ pour tous"],
+            ["02", "Junior", "Progresser", "Selon l’investissement et l’évaluation"],
+            ["03", "Noyau et plus", "Transmettre", "Selon la sagesse et le parcours"],
+          ].map(([num, title, verb, progression]) => (
             <div className={styles.pathItem} key={title}>
               <div className={styles.pathNumber}>{num}</div>
-              <p>{age}</p>
+              <p>{progression}</p>
               <h3>{title}</h3>
               <span>{verb}</span>
             </div>
@@ -387,9 +388,13 @@ export default function HomePage() {
 
       <footer className={styles.footer}>
         <div className={styles.footerBrand}>
-          <span className={styles.brandMark}>
-            <span>ADS</span>
-          </span>
+          <Image
+            className={styles.brandMark}
+            src="/img/logo.jpeg"
+            alt="Logo ADS"
+            width={42}
+            height={42}
+          />
           <div>
             <strong>ADS</strong>
             <p>Fraternite, Jeunes Leaders</p>

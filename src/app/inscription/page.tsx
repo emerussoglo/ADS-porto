@@ -130,7 +130,7 @@ export default function RegistrationPage() {
         <button
           className={styles.primaryButton}
           type="submit"
-          style={{ marginTop: 20 }}
+          style={{ marginTop: 20, backgroundColor: "#d75d48" }}
         >
           <i className="fa-solid fa-user-plus" />{" "}
           {loading ? "Création..." : "Créer mon compte"}

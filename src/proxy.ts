@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/_next") || pathname.startsWith("/api/")) {
@@ -19,7 +19,10 @@ export function middleware(request: NextRequest) {
     );
   }
 
-  if (isAdminRoute && !adminSession) {
+  if (
+    isAdminRoute &&
+    (!adminSession || adminSession.value !== userSession?.value)
+  ) {
     return NextResponse.redirect(
       new URL("/login?redirect=/admin", request.url),
     );
@@ -28,7 +31,7 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Configurer sur quelles routes le middleware doit s'exécuter (ici : absolument partout)
+// Appliquer les contrôles de navigation sur toutes les routes de l’application.
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

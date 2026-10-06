@@ -75,7 +75,7 @@ export default function LoginPage() {
             {error}
           </p>
         )}
-        <button className={styles.primaryButton} type="submit">
+        <button className={styles.primaryButton} style={{ backgroundColor: "#d75d48" }} type="submit">
           <i className="fa-solid fa-right-to-bracket" />{" "}
           {loading ? "Connexion..." : "Ouvrir ma session"}
         </button>

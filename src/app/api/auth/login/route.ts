@@ -101,7 +101,7 @@ export async function POST(request: Request) {
   });
 
   if (roles.length > 0) {
-    response.cookies.set("admin_session", "authenticated", {
+    response.cookies.set("admin_session", account.id, {
       httpOnly: true,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",

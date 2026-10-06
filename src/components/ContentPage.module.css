@@ -39,7 +39,9 @@
 }
 .hero {
   padding: 110px 9vw 85px;
-  background: #102d2b;
+  background:
+    linear-gradient(105deg, rgba(16, 45, 43, 0.96), rgba(16, 45, 43, 0.72)),
+    url("/img/hero-1.jpg") center 45% / cover;
   color: #fbfaf7;
   position: relative;
   overflow: hidden;

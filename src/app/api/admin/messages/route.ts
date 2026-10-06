@@ -3,17 +3,10 @@ import { NextResponse } from "next/server";
 import { asc, eq } from "drizzle-orm";
 import { db } from "@/lib/turso";
 import { memberProfiles, notifications, users } from "@/lib/schema";
-
-function isAdminSession(request: Request) {
-  const cookieHeader = request.headers.get("cookie") ?? "";
-  return cookieHeader
-    .split(";")
-    .map((part) => part.trim())
-    .some((entry) => entry.startsWith("admin_session=") && entry.split("=")[1]);
-}
+import { getAdminUserId } from "@/lib/request-auth";
 
 export async function GET(request: Request) {
-  if (!isAdminSession(request)) {
+  if (!(await getAdminUserId(request, "members"))) {
     return NextResponse.json(
       { error: "Accès administrateur requis" },
       { status: 401 },
@@ -30,13 +23,14 @@ export async function GET(request: Request) {
     })
     .from(users)
     .leftJoin(memberProfiles, eq(memberProfiles.userId, users.id))
+    .where(eq(users.status, "active"))
     .orderBy(asc(users.username));
 
   return NextResponse.json({ members });
 }
 
 export async function POST(request: Request) {
-  if (!isAdminSession(request)) {
+  if (!(await getAdminUserId(request, "members"))) {
     return NextResponse.json(
       { error: "Accès administrateur requis" },
       { status: 401 },
@@ -59,26 +53,52 @@ export async function POST(request: Request) {
     );
   }
 
-  const [recipient] = await db
-    .select({ id: users.id })
-    .from(users)
-    .where(eq(users.id, userId))
-    .limit(1);
+  const now = new Date().toISOString();
+  if (userId === "all") {
+    const recipients = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.status, "active"));
 
-  if (!recipient) {
-    return NextResponse.json(
-      { error: "Utilisateur introuvable." },
-      { status: 404 },
+    if (recipients.length === 0) {
+      return NextResponse.json(
+        { error: "Aucun compte membre actif à notifier." },
+        { status: 404 },
+      );
+    }
+    await db.insert(notifications).values(
+      recipients.map((recipient) => ({
+        id: crypto.randomUUID(),
+        userId: recipient.id,
+        title,
+        content,
+        readAt: null,
+        createdAt: now,
+        updatedAt: now,
+      })),
     );
-  }
+  } else {
+    const [recipient] = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
-  await db.insert(notifications).values({
-    id: crypto.randomUUID(),
-    userId,
-    title,
-    content,
-    readAt: null,
-  });
+    if (!recipient) {
+      return NextResponse.json(
+        { error: "Utilisateur introuvable." },
+        { status: 404 },
+      );
+    }
+
+    await db.insert(notifications).values({
+      id: crypto.randomUUID(),
+      userId,
+      title,
+      content,
+      readAt: null,
+    });
+  }
 
   return NextResponse.json({ ok: true });
 }

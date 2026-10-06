@@ -1,12 +1,7 @@
 import crypto from "node:crypto";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/turso";
-import {
-  adminAssignments,
-  adminRoles,
-  memberProfiles,
-  users,
-} from "@/lib/schema";
+import { memberProfiles, users } from "@/lib/schema";
 import { generatePersonalNumber, hashPassword } from "@/lib/auth";
 
 export async function POST(request: Request) {
@@ -67,7 +62,7 @@ export async function POST(request: Request) {
     userId,
     firstName,
     lastName,
-    level: "Membre",
+    level: "Minime",
     parish: "À préciser",
     birthDate: null,
     fatherName: null,

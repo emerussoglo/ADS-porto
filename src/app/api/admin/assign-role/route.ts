@@ -4,19 +4,10 @@ import { and, eq, sql } from "drizzle-orm";
 import { ensureDefaultAdminRoles } from "@/lib/auth";
 import { db } from "@/lib/turso";
 import { adminAssignments, adminRoles, users } from "@/lib/schema";
-
-function isAdminSession(request: Request) {
-  const cookieHeader = request.headers.get("cookie") ?? "";
-  const adminSession = cookieHeader
-    .split(";")
-    .map((part) => part.trim())
-    .find((entry) => entry.startsWith("admin_session="));
-
-  return Boolean(adminSession && adminSession.split("=")[1]);
-}
+import { getAdminUserId } from "@/lib/request-auth";
 
 export async function POST(request: Request) {
-  if (!isAdminSession(request)) {
+  if (!(await getAdminUserId(request))) {
     return NextResponse.json(
       { error: "Accès administrateur requis" },
       { status: 401 },

@@ -98,6 +98,14 @@
     sans-serif;
   position: relative;
 }
+.brandLogo {
+  width: 42px;
+  height: 42px;
+  flex: none;
+  border-radius: 50%;
+  object-fit: contain;
+  background: #fff;
+}
 .mark:after {
   content: "";
   position: absolute;

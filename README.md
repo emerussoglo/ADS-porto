@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ADS — Fraternité, Jeunes Leaders
 
-## Getting Started
+Application Next.js du mouvement ADS, avec un site public, un espace membre et
+un espace d’administration.
 
-First, run the development server:
+## Démarrer le projet
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Pour conserver les comptes, profils, formations et notifications entre les
+redémarrages, configure une base Turso dans `.env.local` avec
+`TURSO_DATABASE_URL` et `TURSO_AUTH_TOKEN`. L’application accepte aussi les
+alias `TURSO_URL` et `TURSO_KEY`. Ne versionne jamais ce fichier.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Espace membre et administration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- L’inscription crée un compte membre et son profil en base de données. Le
+  membre peut ensuite se reconnecter avec son identifiant ou son adresse email.
+- Chaque rubrique de l’espace membre possède sa propre route sous
+  `/espace-prive` (profil, formations, activités, évaluations, documents,
+  messages, mérites et sanctions).
+- Un administrateur disposant de l’accès « Formations » peut créer une
+  formation en brouillon ou la publier. La publication enregistre la formation
+  et crée une notification pour chaque compte actif; elle apparaît dans la
+  rubrique publique Formations et dans les espaces membres.
+- La rubrique « Messages » de l’administration permet d’envoyer une notification
+  à un membre actif ou à tous les membres actifs.
+- Le compte membre ne peut pas modifier son niveau ADS : la progression depuis
+  Minime dépend des responsables, de l’investissement, de la sagesse et des
+  évaluations.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Les variables d’accès à la base doivent être fournies par l’administrateur du
+projet; aucune valeur de connexion ne doit être ajoutée à ce dépôt.

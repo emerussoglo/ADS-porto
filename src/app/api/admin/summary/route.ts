@@ -7,19 +7,10 @@ import {
   memberProfiles,
   users,
 } from "@/lib/schema";
-
-function isAdminSession(request: Request) {
-  const cookieHeader = request.headers.get("cookie") ?? "";
-  const adminSession = cookieHeader
-    .split(";")
-    .map((part) => part.trim())
-    .find((entry) => entry.startsWith("admin_session="));
-
-  return Boolean(adminSession && adminSession.split("=")[1]);
-}
+import { getAdminUserId } from "@/lib/request-auth";
 
 export async function GET(request: Request) {
-  if (!isAdminSession(request)) {
+  if (!(await getAdminUserId(request, "any"))) {
     return NextResponse.json(
       { error: "Accès administrateur requis" },
       { status: 401 },
@@ -59,10 +50,23 @@ export async function GET(request: Request) {
     .leftJoin(memberProfiles, eq(memberProfiles.userId, users.id))
     .leftJoin(adminRoles, eq(adminRoles.id, adminAssignments.roleId));
 
+  const members = await db
+    .select({
+      userId: users.id,
+      username: users.username,
+      email: users.email,
+      firstName: memberProfiles.firstName,
+      lastName: memberProfiles.lastName,
+      status: users.status,
+    })
+    .from(users)
+    .leftJoin(memberProfiles, eq(memberProfiles.userId, users.id));
+
   return NextResponse.json({
     principalLimit: 3,
     principalCount,
     roles: roleRows,
     assignedUsers,
+    members,
   });
 }

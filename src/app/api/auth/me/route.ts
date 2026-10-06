@@ -7,14 +7,10 @@ import {
   memberProfiles,
   users,
 } from "@/lib/schema";
+import { getAuthenticatedUserId } from "@/lib/request-auth";
 
 export async function GET(request: Request) {
-  const cookieHeader = request.headers.get("cookie") ?? "";
-  const userId = cookieHeader
-    .split(";")
-    .map((part) => part.trim())
-    .find((entry) => entry.startsWith("user_session="))
-    ?.split("=")[1];
+  const userId = await getAuthenticatedUserId(request);
 
   if (!userId) {
     return NextResponse.json({ error: "Non connecté" }, { status: 401 });
@@ -57,18 +53,14 @@ export async function GET(request: Request) {
 
   return NextResponse.json({
     ...member,
+    level: member.level === "Membre" ? "Minime" : member.level,
     isAdmin: adminLinks.length > 0,
     roles: adminLinks,
   });
 }
 
 export async function PUT(request: Request) {
-  const cookieHeader = request.headers.get("cookie") ?? "";
-  const userId = cookieHeader
-    .split(";")
-    .map((part) => part.trim())
-    .find((entry) => entry.startsWith("user_session="))
-    ?.split("=")[1];
+  const userId = await getAuthenticatedUserId(request);
 
   if (!userId) {
     return NextResponse.json({ error: "Non connecté" }, { status: 401 });
@@ -81,7 +73,6 @@ export async function PUT(request: Request) {
     phone?: string;
     username?: string;
     parish?: string;
-    level?: string;
     avatarUrl?: string;
   };
 
@@ -134,7 +125,6 @@ export async function PUT(request: Request) {
       firstName,
       lastName,
       parish: body.parish ?? null,
-      level: body.level ?? null,
       avatarUrl: body.avatarUrl ?? null,
       updatedAt: new Date().toISOString(),
     })
