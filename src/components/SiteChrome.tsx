@@ -9,6 +9,7 @@ import styles from "./SiteChrome.module.css";
 const links = [
   ["Accueil", "/", "fa-house"],
   ["À propos", "/about", "fa-circle-info"],
+  ["Espace privé", "/espace-prive", "fa-shield-halved"],
   ["Formations", "/learning", "fa-graduation-cap"],
   ["Agenda", "/agenda", "fa-calendar-days"],
   ["Plus", "/plus", "fa-star"],
@@ -23,7 +24,7 @@ export default function SiteChrome({
   const pathname = usePathname();
   const isAppArea = pathname.startsWith("/espace-prive") || pathname.startsWith("/admin");
 
-  if (isAppArea) return <>{children}</>;
+  if (isAppArea || pathname === "/login") return <>{children}</>;
 
   return (
     <div className={styles.shell}>
@@ -43,8 +44,14 @@ export default function SiteChrome({
           </span>
         </Link>
         <nav className={`${styles.nav} ${open ? styles.open : ""}`}>
-          {links.map(([label, href, icon]) => (
-            <Link href={href} key={href} onClick={() => setOpen(false)}>
+          {links.filter(([, href]) => href !== "/espace-prive").map(([label, href, icon]) => (
+            <Link
+              href={href}
+              key={href}
+              className={pathname === href ? styles.active : ""}
+              aria-current={pathname === href ? "page" : undefined}
+              onClick={() => setOpen(false)}
+            >
               <i className={`fa-solid ${icon}`} aria-hidden="true" />
               {label}
             </Link>
@@ -54,32 +61,30 @@ export default function SiteChrome({
             className={styles.join}
             onClick={() => setOpen(false)}
           >
-            <i className="fa-solid fa-user-plus" aria-hidden="true" /> Rejoindre
-            ADS
+            <i className="fa-solid fa-user-plus" aria-hidden="true" /> S&apos;inscrire
           </Link>
           <Link
             href="/login"
-            className={styles.mobileMember}
+            className={`${styles.mobileMember} ${pathname.startsWith("/espace-prive") ? styles.active : ""}`}
             onClick={() => setOpen(false)}
           >
-            <i className="fa-solid fa-shield-halved" aria-hidden="true" />{" "}
-            Espace membre
+            <i className="fa-solid fa-shield-halved" aria-hidden="true" /> Espace Privé
           </Link>
         </nav>
         <div className={styles.actions}>
           <Link
             href="/login"
-            className={`${styles.login} ${styles.desktopMember}`}
+            className={`${styles.login} ${styles.desktopMember} ${pathname.startsWith("/espace-prive") ? styles.active : ""}`}
           >
-            <i className="fa-solid fa-shield-halved" aria-hidden="true" />{" "}
-            Espace membre
+            <i className="fa-solid fa-shield-halved" aria-hidden="true" /> Espace Privé
           </Link>
           <button
             className={styles.menu}
             onClick={() => setOpen(!open)}
-            aria-label="Ouvrir le menu"
+            aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={open}
           >
-            <i className="fa-solid fa-bars" />
+            <i className={`fa-solid ${open ? "fa-xmark" : "fa-bars"}`} />
           </button>
         </div>
       </header>
@@ -99,7 +104,8 @@ export default function SiteChrome({
           </div>
         </div>
         <div className={styles.footerLinks}>
-          {links.slice(1).map(([label, href, icon]) => (
+          <h2>Navigation</h2>
+          {links.filter(([, href]) => href !== "/espace-prive").map(([label, href, icon]) => (
             <Link href={href} key={href}>
               <i className={`fa-solid ${icon}`} aria-hidden="true" />
               {label}
@@ -107,17 +113,21 @@ export default function SiteChrome({
           ))}
         </div>
         <div className={styles.socials}>
-          <a href="mailto:edahbriand1@gmail.com">
-            <i className="fa-solid fa-envelope" /> Email
-          </a>
-          <a href="https://wa.me/2290153513734">
-            <i className="fa-brands fa-whatsapp" /> WhatsApp
-          </a>
-          <a href="tel:+2290153513734">
-            <i className="fa-solid fa-phone" /> 01 53 51 37 34
+          <h2>Contact</h2>
+          <Link href="/#contact">
+            <i className="fa-solid fa-envelope" /> Écrire à l’administration
+          </Link>
+          <a href="https://maps.google.com/?q=Porto-Novo,+Benin">
+            <i className="fa-solid fa-location-dot" /> Diocèse de Porto-Novo, Bénin
           </a>
         </div>
-        <p>© 2026 ADS · Porto-Novo, Bénin</p>
+        <div className={styles.socials}>
+          <h2>Liens utiles</h2>
+          <Link href="/login">Connexion</Link>
+          <Link href="/inscription">Adhérer au mouvement</Link>
+          <Link href="/admin">Administration</Link>
+        </div>
+        <p>© {new Date().getFullYear()} ADS, Fraternité, Jeunes Leaders — Diocèse de Porto-Novo. Tous droits réservés.</p>
       </footer>
     </div>
   );

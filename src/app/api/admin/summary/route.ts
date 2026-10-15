@@ -58,6 +58,8 @@ export async function GET(request: Request) {
       firstName: memberProfiles.firstName,
       lastName: memberProfiles.lastName,
       status: users.status,
+      level: memberProfiles.level,
+      approvedNextLevel: memberProfiles.approvedNextLevel,
     })
     .from(users)
     .leftJoin(memberProfiles, eq(memberProfiles.userId, users.id));

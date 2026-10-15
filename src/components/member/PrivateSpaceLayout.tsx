@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
@@ -113,7 +114,13 @@ export default function PrivateSpaceLayout({
       <main className={styles.dashboard}>
         <aside className={styles.sidebar}>
           <div className={styles.sideBrand}>
-            <span className={styles.mark} aria-label="ADS">ADS</span>
+            <Image
+              className={styles.mark}
+              src="/img/logo.jpeg"
+              alt="Emblème ADS"
+              width={40}
+              height={40}
+            />
             <div>
               <strong>Espace membre</strong>
               <small>Service · Union · Vie exemplaire</small>

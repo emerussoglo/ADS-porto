@@ -13,8 +13,17 @@ type Training = {
   whatsappUrl: string | null;
 };
 
+type Testimonial = {
+  id: string;
+  content: string;
+  rating: number;
+  authorName: string;
+  trainingTitle: string;
+};
+
 export default function LearningPage() {
   const [trainings, setTrainings] = useState<Training[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -23,12 +32,21 @@ export default function LearningPage() {
 
     async function loadTrainings() {
       try {
-        const response = await fetch("/api/trainings", { cache: "no-store" });
-        if (!response.ok) {
-          throw new Error("Impossible de charger les formations publiées.");
+        const [response, contentResponse] = await Promise.all([
+          fetch("/api/trainings", { cache: "no-store" }),
+          fetch("/api/public/content", { cache: "no-store" }),
+        ]);
+        if (!response.ok || !contentResponse.ok) {
+          throw new Error("Impossible de charger les contenus de formation.");
         }
-        const result = (await response.json()) as { trainings: Training[] };
-        if (!cancelled) setTrainings(result.trainings);
+        const [result, content] = await Promise.all([
+          response.json() as Promise<{ trainings: Training[] }>,
+          contentResponse.json() as Promise<{ testimonials: Testimonial[] }>,
+        ]);
+        if (!cancelled) {
+          setTrainings(result.trainings);
+          setTestimonials(content.testimonials);
+        }
       } catch (loadError) {
         if (!cancelled) {
           setError(
@@ -78,11 +96,7 @@ export default function LearningPage() {
           </p>
         )}
         {trainings.map((training) => {
-          const contactUrl =
-            training.whatsappUrl ||
-            `https://wa.me/2290153513734?text=${encodeURIComponent(
-              `Bonjour ADS, je souhaite obtenir la formation : ${training.title}.`,
-            )}`;
+          const contactUrl = training.whatsappUrl || "/#contact";
           return (
             <article className={styles.formation} key={training.id}>
               <div
@@ -124,11 +138,12 @@ export default function LearningPage() {
               </div>
               <a
                 className={styles.button}
-                target="_blank"
-                rel="noreferrer"
+                target={training.whatsappUrl ? "_blank" : undefined}
+                rel={training.whatsappUrl ? "noreferrer" : undefined}
                 href={contactUrl}
               >
-                Obtenir <i className="fa-brands fa-whatsapp" />
+                {training.whatsappUrl ? "Obtenir via WhatsApp" : "Demander les informations"}
+                {training.whatsappUrl && <i className="fa-brands fa-whatsapp" />}
               </a>
             </article>
           );
@@ -137,21 +152,26 @@ export default function LearningPage() {
       <section className={styles.sectionAlt}>
         <div className={styles.heading}>
           <h2>Ils partagent leur expérience</h2>
-          <p>Les avis et témoignages seront liés à chaque formation publiée.</p>
+          <p>Les témoignages vérifiés associés aux formations publiées.</p>
         </div>
-        <div className={styles.cards}>
-          {[
-            ["fa-quote-left", "Une formation utile", "Des repères pour prendre sa place dans son équipe."],
-            ["fa-star", "Un parcours concret", "Des supports et des échanges pour avancer."],
-            ["fa-heart", "Grandir ensemble", "Servir avec plus de joie et de confiance."],
-          ].map(([icon, title, text]) => (
-            <article className={styles.card} key={title}>
-              <i className={`fa-solid ${icon}`} />
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </article>
-          ))}
-        </div>
+        {testimonials.length > 0 ? (
+          <div className={styles.cards}>
+            {testimonials.map((item) => (
+              <article className={styles.card} key={item.id}>
+                <div aria-label={`${item.rating} étoiles`}>
+                  {Array.from({ length: Math.min(5, Math.max(0, item.rating)) }, (_, index) => (
+                    <i className="fa-solid fa-star" key={index} />
+                  ))}
+                </div>
+                <h3>{item.authorName}</h3>
+                <p>« {item.content} »</p>
+                <small>{item.trainingTitle}</small>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className={styles.notice}>Aucun témoignage n’a encore été publié.</p>
+        )}
       </section>
     </main>
   );

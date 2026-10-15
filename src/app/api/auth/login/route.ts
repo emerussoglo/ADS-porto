@@ -69,6 +69,22 @@ export async function POST(request: Request) {
     );
   }
 
+  if (account.status === "pending") {
+    return NextResponse.json(
+      {
+        error: "Ton dossier est en attente de validation par l’administration après vérification du paiement.",
+        status: "pending",
+      },
+      { status: 403 },
+    );
+  }
+  if (account.status !== "active") {
+    return NextResponse.json(
+      { error: "Ce compte n’est pas actif. Contacte l’administration.", status: account.status },
+      { status: 403 },
+    );
+  }
+
   const roles = await db
     .select({
       roleName: adminRoles.name,

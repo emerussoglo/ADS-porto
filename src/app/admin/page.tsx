@@ -38,7 +38,33 @@ type AdminSummary = {
     firstName: string | null;
     lastName: string | null;
     status: string;
+    level: string | null;
+    approvedNextLevel: string | null;
   }>;
+};
+
+type MembershipPayment = {
+  id: string;
+  userId: string;
+  applicationType: "new" | "renewal";
+  membershipYear: number;
+  amountCfa: number;
+  status: "pending_review" | "approved" | "rejected";
+  reference: string | null;
+  proofUrl: string | null;
+  nextLevel: string | null;
+  username: string;
+  personalNumber: string;
+  firstName: string;
+  lastName: string;
+  level: string | null;
+  parish: string | null;
+};
+
+type MembershipData = {
+  feeCfa: number;
+  levels: string[];
+  payments: MembershipPayment[];
 };
 
 type AdminTraining = {
@@ -47,6 +73,16 @@ type AdminTraining = {
   summary: string;
   status: "draft" | "published";
   priceCfa: number;
+};
+
+type ContactMessage = {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  content: string;
+  status: "new" | "read" | "replied";
+  createdAt: string;
 };
 
 export default function AdminPage() {
@@ -72,6 +108,8 @@ export default function AdminPage() {
   const [messageTitle, setMessageTitle] = useState("");
   const [messageContent, setMessageContent] = useState("");
   const [messageSending, setMessageSending] = useState(false);
+  const [contactMessages, setContactMessages] = useState<ContactMessage[]>([]);
+  const [contactLoading, setContactLoading] = useState(false);
   const [trainingTitle, setTrainingTitle] = useState("");
   const [trainingSummary, setTrainingSummary] = useState("");
   const [trainingCoverUrl, setTrainingCoverUrl] = useState("");
@@ -82,10 +120,16 @@ export default function AdminPage() {
   );
   const [trainingSaving, setTrainingSaving] = useState(false);
   const [trainings, setTrainings] = useState<AdminTraining[]>([]);
+  const [membership, setMembership] = useState<MembershipData | null>(null);
+  const [membershipFee, setMembershipFee] = useState("2000");
+  const [membershipLoading, setMembershipLoading] = useState(false);
+  const [levelMemberId, setLevelMemberId] = useState("");
+  const [nextLevel, setNextLevel] = useState("Cadet");
 
   const sections = [
     "Vue d’ensemble",
     "Membres",
+    "Adhésions",
     "À propos",
     "Formations",
     "Agenda",
@@ -144,6 +188,134 @@ export default function AdminPage() {
       return;
     }
     setTrainings(result.trainings ?? []);
+  };
+
+  const loadMembership = async () => {
+    setMembershipLoading(true);
+    const response = await fetch("/api/admin/membership", { cache: "no-store" });
+    const result = (await response.json()) as MembershipData & { error?: string };
+    setMembershipLoading(false);
+    if (!response.ok) {
+      setError(result.error || "Impossible de charger les dossiers d’adhésion.");
+      return;
+    }
+    setMembership(result);
+    setMembershipFee(String(result.feeCfa));
+    if (!levelMemberId) {
+      const eligibleMember = summary?.members.find(
+        (member) => member.status === "active" && member.level !== "Administration",
+      );
+      if (eligibleMember) setLevelMemberId(eligibleMember.userId);
+    }
+  };
+
+  const loadContactMessages = async () => {
+    setContactLoading(true);
+    try {
+      const response = await fetch("/api/admin/contact", { cache: "no-store" });
+      const result = (await response.json()) as {
+        messages?: ContactMessage[];
+        error?: string;
+      };
+      if (!response.ok) {
+        setError(result.error || "Impossible de charger les messages du site.");
+        return;
+      }
+      setContactMessages(result.messages ?? []);
+    } catch {
+      setError("Impossible de joindre le service des messages du site.");
+    } finally {
+      setContactLoading(false);
+    }
+  };
+
+  const updateContactMessage = async (
+    id: string,
+    status: "read" | "replied",
+  ) => {
+    setError("");
+    setInfo("");
+    try {
+      const response = await fetch("/api/admin/contact", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status }),
+      });
+      const result = (await response.json()) as { error?: string };
+      if (!response.ok) {
+        setError(result.error || "Impossible de mettre à jour ce message.");
+        return;
+      }
+      setInfo("Statut du message mis à jour.");
+      await loadContactMessages();
+    } catch {
+      setError("Impossible de joindre le service des messages du site.");
+    }
+  };
+
+  const saveMembershipFee = async () => {
+    const amountCfa = Number(membershipFee);
+    if (!Number.isSafeInteger(amountCfa) || amountCfa < 0) {
+      setError("Saisis un montant annuel entier, positif ou nul.");
+      return;
+    }
+    const response = await fetch("/api/admin/membership", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "set_fee", amountCfa }),
+    });
+    const result = (await response.json()) as { error?: string };
+    if (!response.ok) {
+      setError(result.error || "Impossible d’enregistrer le montant.");
+      return;
+    }
+    setInfo("Montant annuel de cotisation enregistré.");
+    await loadMembership();
+  };
+
+  const grantLevel = async () => {
+    const response = await fetch("/api/admin/membership", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "grant_level",
+        userId: levelMemberId,
+        nextLevel,
+      }),
+    });
+    const result = (await response.json()) as { error?: string };
+    if (!response.ok) {
+      setError(result.error || "Impossible d’accorder ce passage de niveau.");
+      return;
+    }
+    setInfo("Passage de niveau accordé. Le membre peut maintenant renouveler son adhésion.");
+    const refreshed = await fetch("/api/admin/summary", { cache: "no-store" });
+    setSummary((await refreshed.json()) as AdminSummary);
+    await loadMembership();
+  };
+
+  const reviewMembership = async (
+    paymentId: string,
+    decision: "approve" | "reject",
+  ) => {
+    const note = decision === "reject"
+      ? window.prompt("Indique la raison du refus ou les éléments à corriger.") ?? ""
+      : "";
+    if (decision === "reject" && !note.trim()) return;
+    const response = await fetch("/api/admin/membership", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ paymentId, decision, note }),
+    });
+    const result = (await response.json()) as { error?: string };
+    if (!response.ok) {
+      setError(result.error || "Impossible de traiter ce paiement.");
+      return;
+    }
+    setInfo(decision === "approve" ? "Paiement validé et adhésion mise à jour." : "Paiement refusé.");
+    const refreshed = await fetch("/api/admin/summary", { cache: "no-store" });
+    setSummary((await refreshed.json()) as AdminSummary);
+    await loadMembership();
   };
 
   const handleCreateTraining = async () => {
@@ -292,6 +464,8 @@ export default function AdminPage() {
                 setError("");
                 setInfo("");
                 if (section === "Formations") void loadTrainings();
+                if (section === "Adhésions") void loadMembership();
+                if (section === "Messages") void loadContactMessages();
               }}
               className={tab === section ? styles.active : ""}
               key={section}
@@ -469,6 +643,60 @@ export default function AdminPage() {
 
             {tab === "Messages" && (
               <div style={{ display: "grid", gap: 12, marginTop: 16 }}>
+                <h3>Messages reçus depuis le site</h3>
+                {contactLoading && <p className={styles.muted}>Chargement des messages…</p>}
+                {!contactLoading && contactMessages.length === 0 && (
+                  <p className={styles.muted}>Aucun message de contact reçu.</p>
+                )}
+                {contactMessages.map((contact) => (
+                  <article className={styles.editor} key={contact.id}>
+                    <div className={styles.trainingRow}>
+                      <div>
+                        <strong>{contact.subject}</strong>
+                        <small>
+                          {contact.name} · <a href={`mailto:${contact.email}`}>{contact.email}</a>
+                          {" · "}{new Intl.DateTimeFormat("fr-FR", {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          }).format(new Date(contact.createdAt))}
+                        </small>
+                      </div>
+                      <span className={styles.badge}>
+                        {contact.status === "new" ? "Nouveau" : contact.status === "read" ? "Lu" : "Répondu"}
+                      </span>
+                    </div>
+                    <p>{contact.content}</p>
+                    <div className={styles.actions}>
+                      {contact.status === "new" && (
+                        <button
+                          className={styles.secondary}
+                          onClick={() => void updateContactMessage(contact.id, "read")}
+                        >
+                          Marquer comme lu
+                        </button>
+                      )}
+                      {contact.status !== "replied" && (
+                        <>
+                          <a
+                            className={styles.secondary}
+                            href={`mailto:${contact.email}?subject=${encodeURIComponent(`Re: ${contact.subject}`)}`}
+                          >
+                            Répondre par email
+                          </a>
+                          <button
+                            className={styles.primary}
+                            onClick={() => void updateContactMessage(contact.id, "replied")}
+                          >
+                            Marquer comme répondu
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </article>
+                ))}
+                {error && <p className={styles.error}>{error}</p>}
+                {info && <p className={styles.success}>{info}</p>}
+                <h3>Envoyer un message aux membres</h3>
                 <select
                   value={messageRecipient}
                   onChange={(event) => setMessageRecipient(event.target.value)}
@@ -509,10 +737,141 @@ export default function AdminPage() {
                 )}
               </div>
             )}
+
+            {tab === "Adhésions" && (
+              <div className={styles.editor}>
+                <h3>Cotisation annuelle</h3>
+                <p>
+                  Le montant est identique pour tous les membres. Les nouveaux
+                  dossiers restent en attente jusqu’à la vérification manuelle
+                  du paiement.
+                </p>
+                <div className={styles.editorFields}>
+                  <label>
+                    Montant annuel (FCFA)
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={membershipFee}
+                      onChange={(event) => setMembershipFee(event.target.value)}
+                    />
+                  </label>
+                  <div className={styles.actions}>
+                    <button className={styles.primary} onClick={saveMembershipFee}>
+                      Enregistrer le montant
+                    </button>
+                  </div>
+                </div>
+
+                <h3 className={styles.listTitle}>Passage de niveau</h3>
+                <p>
+                  Un renouvellement n’est possible qu’après cette autorisation.
+                  Le nouveau niveau ne sera appliqué qu’après validation du paiement.
+                </p>
+                <div className={styles.editorFields}>
+                  <label>
+                    Membre actif
+                    <select
+                      value={levelMemberId}
+                      onChange={(event) => setLevelMemberId(event.target.value)}
+                    >
+                      <option value="">Choisir un membre</option>
+                      {summary.members
+                        .filter(
+                          (member) =>
+                            member.status === "active" &&
+                            member.level !== "Administration",
+                        )
+                        .map((member) => (
+                          <option key={member.userId} value={member.userId}>
+                            {member.firstName || member.username} {member.lastName || ""}
+                            {member.level ? ` — ${member.level}` : ""}
+                          </option>
+                        ))}
+                    </select>
+                  </label>
+                  <label>
+                    Niveau accordé
+                    <select
+                      value={nextLevel}
+                      onChange={(event) => setNextLevel(event.target.value)}
+                    >
+                      {(membership?.levels ?? ["Cadet", "Junior", "Spirituel"])
+                        .filter((level) => level !== "Minime")
+                        .map((level) => (
+                          <option key={level} value={level}>
+                            {level}
+                          </option>
+                        ))}
+                    </select>
+                  </label>
+                </div>
+                <div className={styles.actions}>
+                  <button
+                    className={styles.primary}
+                    onClick={grantLevel}
+                    disabled={!levelMemberId}
+                  >
+                    Accorder le passage
+                  </button>
+                </div>
+
+                <h3 className={styles.listTitle}>Dossiers de paiement</h3>
+                {membershipLoading && <p className={styles.muted}>Chargement…</p>}
+                {!membershipLoading &&
+                  membership?.payments.filter((payment) => payment.status === "pending_review").length === 0 && (
+                    <p className={styles.muted}>Aucun dossier en attente de vérification.</p>
+                  )}
+                {membership?.payments
+                  .filter((payment) => payment.status === "pending_review")
+                  .map((payment) => (
+                    <article className={styles.membershipCard} key={payment.id}>
+                      <div className={styles.membershipHeading}>
+                        <div>
+                          <strong>{payment.firstName} {payment.lastName}</strong>
+                          <small>
+                            {payment.applicationType === "new" ? "Nouvelle inscription" : "Renouvellement"}
+                            {" · "}{payment.membershipYear} · {payment.personalNumber}
+                          </small>
+                        </div>
+                        <span className={styles.badge}>{payment.amountCfa.toLocaleString("fr-FR")} FCFA</span>
+                      </div>
+                      <p>
+                        Identifiant : <b>{payment.username}</b>
+                        {payment.parish ? ` · ${payment.parish}` : ""}
+                        {payment.nextLevel ? ` · Niveau demandé : ${payment.nextLevel}` : ""}
+                      </p>
+                      <p>Référence : {payment.reference || "Non renseignée"}</p>
+                      {payment.proofUrl && (
+                        <a href={payment.proofUrl} target="_blank" rel="noreferrer">
+                          Consulter la preuve de paiement
+                        </a>
+                      )}
+                      <div className={styles.actions}>
+                        <button
+                          className={styles.primary}
+                          onClick={() => void reviewMembership(payment.id, "approve")}
+                        >
+                          Valider le paiement
+                        </button>
+                        <button
+                          className={styles.secondary}
+                          onClick={() => void reviewMembership(payment.id, "reject")}
+                        >
+                          Refuser
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                {error && <p className={styles.error}>{error}</p>}
+                {info && <p className={styles.success}>{info}</p>}
+              </div>
+            )}
           </div>
 
           <div className={styles.table}>
-            {tab !== "Membres" && tab !== "Administrateurs" && (
+            {tab !== "Membres" && tab !== "Administrateurs" && tab !== "Adhésions" && tab !== "Messages" && (
               <p className={styles.muted}>
                 Cette rubrique ne contient pas encore de données publiées.
               </p>

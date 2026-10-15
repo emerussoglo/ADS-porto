@@ -19,7 +19,7 @@ export async function getAuthenticatedUserId(request: Request) {
     .from(users)
     .where(eq(users.id, userId))
     .limit(1);
-  return user && user.status !== "suspended" ? user.id : null;
+  return user?.status === "active" ? user.id : null;
 }
 
 export async function getAdminUserId(request: Request, scope = "all") {

@@ -1,0 +1,678 @@
+.page {
+  min-height: calc(100vh - 82px);
+  padding: 36px 20px 78px;
+  background:
+    radial-gradient(ellipse at 12% 28%, rgba(146, 10, 34, 0.28), transparent 35%),
+    radial-gradient(ellipse at 86% 66%, rgba(14, 78, 56, 0.45), transparent 38%),
+    linear-gradient(125deg, #101c38, #092d35 54%, #071d26);
+  color: #17304a;
+}
+
+.loading {
+  min-height: 65vh;
+  display: grid;
+  place-items: center;
+  color: #d9c16d;
+  background: #08172c;
+}
+
+.progress {
+  position: sticky;
+  top: 82px;
+  z-index: 5;
+  max-width: 970px;
+  margin: 0 auto 4px;
+  padding: 14px 22px 12px;
+  text-align: center;
+  background: rgba(7, 20, 42, 0.97);
+  border: 1px solid rgba(218, 190, 93, 0.15);
+  border-radius: 14px 14px 0 0;
+}
+
+.progress > p {
+  margin-bottom: 9px;
+  color: #c9ad55;
+  font: 700 10px Georgia, serif;
+  letter-spacing: 0.17em;
+}
+
+.progressLine {
+  height: 4px;
+  border-radius: 10px;
+  background: #26334a;
+  overflow: hidden;
+}
+
+.progressLine span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #920b16, #d4b64e);
+  transition: width 250ms ease;
+}
+
+.progress ol {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 9px;
+  padding: 0;
+  list-style: none;
+}
+
+.progress li {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #39455a;
+  border-radius: 50%;
+  color: #8793a3;
+  background: #1c293d;
+  font-size: 10px;
+}
+
+.progress .current {
+  border-color: #d6b94e;
+  color: #e4c75b;
+  box-shadow: 0 0 12px #d6b94e66;
+}
+
+.progress .complete {
+  border-color: #368342;
+  color: #fff;
+  background: #368342;
+}
+
+.card {
+  width: min(720px, 100%);
+  min-height: 360px;
+  margin: 0 auto;
+  padding: 32px 36px 27px;
+  border-top: 4px solid #c9ad55;
+  border-radius: 0 0 18px 18px;
+  background: #fbfbfa;
+  box-shadow: 0 22px 56px #020b1a55;
+}
+
+.heading {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e4e7e9;
+}
+
+.icon,
+.successIcon {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 9px;
+  border-radius: 14px;
+  color: #c3a545;
+  background: #f4f1e6;
+  font-size: 19px;
+}
+
+.icon.red {
+  color: #b92231;
+  background: #f8e8e9;
+}
+
+.icon.green {
+  color: #347c43;
+  background: #e8f1e9;
+}
+
+.heading h1 {
+  color: #15314c;
+  font: 700 22px/1.25 Georgia, "Times New Roman", serif;
+  font-variant: small-caps;
+}
+
+.heading p {
+  margin-top: 7px;
+  color: #8793a0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.commitments,
+.choices,
+.fields,
+.familyFields,
+.uploadLayout,
+.identifiers {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.commitments {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.commitments article,
+.familyFields fieldset {
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid #e0e3e6;
+  border-radius: 12px;
+  background: #f7f8f9;
+}
+
+.commitments article:nth-child(2) {
+  border-color: #e9e2cd;
+  background: #faf9f4;
+}
+
+.commitments h2,
+.renewalBox h2,
+.uploadLayout h2 {
+  margin-bottom: 13px;
+  color: #17304a;
+  font: 700 12px Georgia, serif;
+  font-variant: small-caps;
+}
+
+.commitments p {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  color: #687887;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.commitments p i {
+  flex: none;
+  margin-top: 2px;
+  color: #c6a94a;
+}
+
+.terms,
+.fields label,
+.familyFields label,
+.renewalBox label,
+.paymentFields label {
+  display: grid;
+  gap: 7px;
+  color: #233c53;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.terms {
+  grid-template-columns: 19px 1fr;
+  align-items: start;
+  margin-top: 17px;
+  padding: 14px;
+  border: 1px solid #e8dfc4;
+  border-left: 3px solid #c5a648;
+  border-radius: 9px;
+  background: #f8f6ef;
+  color: #69798a;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.terms input {
+  width: 17px;
+  height: 17px;
+  accent-color: #1a4a50;
+}
+
+.choices {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.choice {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 22px 18px;
+  border: 1px solid #dce1e6;
+  border-radius: 16px;
+  color: #18314b;
+  background: #fff;
+  text-align: center;
+  cursor: pointer;
+}
+
+.choice:hover,
+.selectedChoice {
+  border-color: #c5a648 !important;
+  background: #faf8f1 !important;
+  box-shadow: 0 8px 24px #c5a6481a;
+}
+
+.choice > span {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #edf0f4;
+  font-size: 19px;
+}
+
+.choice:nth-child(2) > span {
+  color: #31814a;
+  background: #e9f1eb;
+}
+
+.choice b {
+  font: 700 14px Georgia, serif;
+  font-variant: small-caps;
+}
+
+.choice small {
+  color: #83909e;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.choice > i {
+  color: #c5a648;
+}
+
+.renewalBox {
+  display: grid;
+  gap: 13px;
+  margin-top: 17px;
+  padding: 17px;
+  border: 1px solid #cbd6d4;
+  border-radius: 13px;
+  background: #f0f4f3;
+}
+
+.renewalBox h2 {
+  padding-bottom: 11px;
+  border-bottom: 1px solid #dce2e1;
+}
+
+.fields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fields input,
+.familyFields input,
+.renewalBox input,
+.paymentFields input {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #d8dfe4;
+  border-radius: 9px;
+  outline: none;
+  color: #253c51;
+  background: #fff;
+  font: inherit;
+  font-size: 12px;
+}
+
+.fields input:focus,
+.familyFields input:focus,
+.renewalBox input:focus,
+.paymentFields input:focus {
+  border-color: #c2a449;
+  box-shadow: 0 0 0 3px #c2a44922;
+}
+
+.fields em,
+.familyFields em {
+  color: #b92731;
+  font-style: normal;
+}
+
+.gender {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  border: 0;
+}
+
+.gender legend {
+  grid-column: 1 / -1;
+  margin-bottom: 8px;
+  color: #233c53;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.gender legend em {
+  color: #b92731;
+  font-style: normal;
+}
+
+.gender button {
+  min-height: 40px;
+  border: 1px solid #d8dfe4;
+  border-radius: 9px;
+  background: #fff;
+  color: #647384;
+  cursor: pointer;
+}
+
+.gender button.selectedChoice {
+  color: #17304a;
+}
+
+.passwordRules {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  color: #8a969e;
+  font-size: 10px;
+}
+
+.passwordRules i {
+  margin-right: 4px;
+}
+
+.rulePassed {
+  color: #347c43 !important;
+}
+
+.ruleError {
+  color: #b92731 !important;
+}
+
+.familyFields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.familyFields fieldset {
+  display: grid;
+  gap: 12px;
+}
+
+.familyFields legend {
+  padding: 0 8px;
+  color: #17304a;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.identifiers {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.identifiers article {
+  display: grid;
+  gap: 8px;
+  padding: 17px;
+  border: 1px solid #dce1e6;
+  border-radius: 12px;
+  background: #f2f4f6;
+}
+
+.identifiers article:nth-child(2) {
+  border-color: #e9e2cd;
+  background: #faf9f4;
+}
+
+.identifiers small {
+  color: #84909d;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.identifiers strong {
+  color: #18314b;
+  font-family: Georgia, serif;
+  letter-spacing: 0.1em;
+  overflow-wrap: anywhere;
+}
+
+.notice {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 13px;
+  border: 1px solid #e9e2cd;
+  border-left: 3px solid #c5a648;
+  border-radius: 9px;
+  color: #74818b;
+  background: #faf9f4;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.notice i {
+  color: #c5a648;
+}
+
+.uploadLayout {
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+
+.uploadBox {
+  min-height: 220px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 15px;
+  border: 1px dashed #cdd5da;
+  border-radius: 14px;
+  color: #81909e;
+  background: #fbfcfc;
+  text-align: center;
+  cursor: pointer;
+}
+
+.uploadBox > i {
+  font-size: 30px;
+  color: #b2bdc6;
+}
+
+.uploadBox strong {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+
+.uploadBox small,
+.paymentFields small {
+  color: #9aa4ab;
+  font-size: 10px;
+}
+
+.uploadBox input {
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  position: absolute;
+  overflow: hidden;
+}
+
+.uploadBox img {
+  max-width: 130px;
+  max-height: 160px;
+  border-radius: 7px;
+  object-fit: cover;
+}
+
+.uploadLayout aside {
+  display: grid;
+  gap: 10px;
+}
+
+.uploadLayout aside p {
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.paymentSummary {
+  margin-top: 19px;
+  padding: 16px 18px;
+  border: 1px solid #dce1e6;
+  border-radius: 14px;
+  background: #f3f5f7;
+}
+
+.paymentSummary p {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 7px 0;
+  color: #8995a0;
+  font-size: 12px;
+}
+
+.paymentSummary strong {
+  color: #17304a;
+  text-align: right;
+}
+
+.paymentSummary p:last-child strong {
+  color: #b89c41;
+  font-size: 16px;
+}
+
+.paymentSummary hr {
+  margin: 12px 0;
+  border: 0;
+  border-top: 1px solid #dfe3e6;
+}
+
+.paymentFields {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.paymentFields input[type="file"] {
+  height: auto;
+  padding: 10px;
+}
+
+.successIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  color: #fff;
+  background: #2f843c;
+  box-shadow: 0 8px 24px #2f843c33;
+  font-size: 28px;
+}
+
+.pendingNote {
+  margin: 17px 0;
+  color: #71808e;
+  font-size: 12px;
+  line-height: 1.65;
+  text-align: center;
+}
+
+.secondaryLink {
+  display: block;
+  padding: 12px;
+  border: 1px solid #d4dce2;
+  border-radius: 9px;
+  color: #17304a;
+  background: #eef1f4;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.error {
+  margin-top: 15px;
+  padding: 11px 13px;
+  border: 1px solid #e8c9cb;
+  border-radius: 8px;
+  color: #a5222c;
+  background: #fbefef;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #e4e7e9;
+}
+
+.actions button {
+  min-height: 40px;
+  padding: 0 17px;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.actions i {
+  margin: 0 5px;
+}
+
+.back {
+  border: 1px solid #cbd3da;
+  color: #617182;
+  background: #eef1f4;
+}
+
+.continue {
+  margin-left: auto;
+  border: 0;
+  color: #e1c454;
+  background: linear-gradient(110deg, #102948, #154d43);
+  box-shadow: 0 6px 15px #10294822;
+}
+
+.continue:disabled,
+.back:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+@media (max-width: 650px) {
+  .page {
+    padding: 20px 12px 45px;
+  }
+
+  .progress {
+    top: 70px;
+    padding: 12px 9px;
+  }
+
+  .progress ol {
+    gap: 4px;
+  }
+
+  .progress li {
+    width: 24px;
+    height: 24px;
+    font-size: 9px;
+  }
+
+  .card {
+    padding: 24px 17px 20px;
+  }
+
+  .commitments,
+  .choices,
+  .fields,
+  .familyFields,
+  .uploadLayout,
+  .identifiers {
+    grid-template-columns: 1fr;
+  }
+
+  .gender {
+    grid-column: auto;
+  }
+}

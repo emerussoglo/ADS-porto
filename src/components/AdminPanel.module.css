@@ -254,6 +254,41 @@
   line-height: 1.6;
 }
 
+.membershipCard {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid #dce6e0;
+  border-radius: 12px;
+  background: #f8fbf9;
+}
+
+.membershipHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.membershipHeading strong,
+.membershipHeading small {
+  display: block;
+}
+
+.membershipHeading small,
+.membershipCard p {
+  color: #657772;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.membershipCard a {
+  width: fit-content;
+  color: #204640;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 @media (max-width: 750px) {
   .page {
     padding: 35px 6vw 60px;
@@ -293,4 +328,46 @@
   .trainingRow {
     align-items: flex-start;
   }
+
+  .membershipHeading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
+
+.page {
+  min-height: 100vh;
+  color: #e7edf2;
+  background:
+    radial-gradient(ellipse at 85% 18%, rgba(13, 72, 76, .28), transparent 43%),
+    radial-gradient(ellipse at 10% 82%, rgba(105, 18, 31, .25), transparent 42%),
+    #081d36;
+}
+.top h1 { color: #f0f1f2; font-family: "Cinzel", Georgia, serif; }
+.top p { color: #a8b6c3; }
+.nav { border: 1px solid rgba(211, 179, 89, .2); background: rgba(5, 18, 38, .95); }
+.nav button { color: #aab7c5; }
+.nav button:hover,.nav .active { color: #17223b; background: linear-gradient(105deg, #d0ad45, #e3cd75); }
+.intro,.table {
+  border: 1px solid rgba(215, 226, 230, .13);
+  background: rgba(255, 255, 255, .055);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, .15);
+}
+.intro h2,.editor h3 { color: #f0f1f2; font-family: "Cinzel", Georgia, serif; }
+.intro p,.editor > p,.muted,.row small,.trainingRow small { color: #a6b4c1; }
+.editor input,.editor textarea,.editor select,.adminFields select,.intro select,.intro input,.intro textarea {
+  border: 1px solid rgba(218, 226, 230, .18);
+  color: #e9eef2;
+  background: rgba(5, 21, 41, .68);
+}
+.editor input::placeholder,.editor textarea::placeholder,.intro input::placeholder,.intro textarea::placeholder { color: #8294a5; }
+.primary { color: #1a2034; background: linear-gradient(110deg, #d0ad45, #e3cd75); }
+.secondary { color: #d6e0e8; background: rgba(255, 255, 255, .1); }
+.row { border-bottom-color: rgba(231, 237, 242, .1); }
+.row strong,.trainingRow strong { color: #e9eef2; }
+.badge { color: #94e3b7; background: rgba(34, 142, 88, .17); }
+.warning { color: #ead286; background: rgba(211, 179, 89, .11); }
+.membershipCard,.trainingRow { border-color: rgba(215, 226, 230, .12); background: rgba(255, 255, 255, .045); }
+.error { color: #ffaaa4; }
+.success { color: #8fe0b2; }
+.primary,.secondary { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
