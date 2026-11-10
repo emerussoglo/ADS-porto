@@ -20,6 +20,7 @@ export async function GET(request: Request) {
       startsAt: events.startsAt,
       endsAt: events.endsAt,
       visibility: events.visibility,
+      category: events.category,
     })
     .from(events)
     .where(
@@ -46,6 +47,7 @@ export async function GET(request: Request) {
   return NextResponse.json({
     events: items.map((event) => ({
       ...event,
+      category: event.category ?? "formation",
       registrationStatus: registrationByEvent.get(event.id) ?? null,
     })),
   });

@@ -465,7 +465,7 @@ export default function RegistrationPage() {
             <div className={styles.choices}>
               <button
                 className={`${styles.choice} ${mode === "new" ? styles.selectedChoice : ""}`}
-                onClick={() => { setMode("new"); setError(""); }}
+                onClick={() => { setMode("new"); setError(""); setStep(3); }}
               >
                 <span><i className="fa-solid fa-user-plus" /></span>
                 <b>Première inscription</b>

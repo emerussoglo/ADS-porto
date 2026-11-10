@@ -123,7 +123,11 @@ export default function PrivateSpaceLayout({
             />
             <div>
               <strong>Espace membre</strong>
-              <small>Service · Union · Vie exemplaire</small>
+              <div className={styles.mottoSmall}>
+                <span className={`${styles.mottoItemSmall} ${styles.mottoRed}`}>Service</span>
+                <span className={`${styles.mottoItemSmall} ${styles.mottoYellow}`}>Union</span>
+                <span className={`${styles.mottoItemSmall} ${styles.mottoGreen}`}>Vie et Emploi</span>
+              </div>
             </div>
             <button
               className={styles.mobileMenu}

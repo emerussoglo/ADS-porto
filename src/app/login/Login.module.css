@@ -31,7 +31,55 @@
 .values { display: flex; gap: 17px; margin-top: 25px; color: #d6bd64; font: 700 10px "Cinzel", Georgia, serif; text-transform: uppercase; letter-spacing: .1em; }
 .values span { display: inline-flex; align-items: center; gap: 7px; }
 .values i { font-size: 9px; }
-.brandSide footer { color: #8da0b0; font-size: 9px; }
+.brandSide footer { color: #8da0b0; font-size: 9px; display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, .1); }
+
+.mottoBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.mottoItem {
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mottoRed {
+  color: #fff;
+  background: linear-gradient(110deg, #a31222, #691221);
+}
+
+.mottoYellow {
+  color: #102d2b;
+  background: linear-gradient(110deg, #e1ad4c, #d4b354);
+}
+
+.mottoGreen {
+  color: #fff;
+  background: linear-gradient(110deg, #1a4a50, #2e7d32);
+}
+
+.homeLink {
+  color: #d8bd5f;
+  font-size: 10px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.homeLink:hover {
+  text-decoration: underline;
+}
 
 .formSide { display: grid; place-items: center; padding: 32px; background: rgba(5, 17, 34, .44); }
 .card { width: min(100%, 430px); padding: clamp(26px, 4vw, 44px); border: 1px solid rgba(218, 226, 230, .15); border-radius: 18px; background: rgba(255, 255, 255, .055); box-shadow: 0 24px 75px rgba(0, 0, 0, .22); }

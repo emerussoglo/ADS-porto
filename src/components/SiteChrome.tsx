@@ -15,6 +15,12 @@ const links = [
   ["Plus", "/plus", "fa-star"],
 ];
 
+const mottoItems = [
+  { label: "Service", color: "red" },
+  { label: "Union", color: "yellow" },
+  { label: "Vie et Emploi", color: "green" },
+];
+
 export default function SiteChrome({
   children,
 }: {
@@ -22,9 +28,9 @@ export default function SiteChrome({
 }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const isAppArea = pathname.startsWith("/espace-prive") || pathname.startsWith("/admin");
-
-  if (isAppArea || pathname === "/login") return <>{children}</>;
+  const isPrivateSpace = pathname.startsWith("/espace-prive");
+  const isAdmin = pathname.startsWith("/admin");
+  const isLogin = pathname === "/login";
 
   return (
     <div className={styles.shell}>
@@ -44,7 +50,7 @@ export default function SiteChrome({
           </span>
         </Link>
         <nav className={`${styles.nav} ${open ? styles.open : ""}`}>
-          {links.filter(([, href]) => href !== "/espace-prive").map(([label, href, icon]) => (
+          {links.map(([label, href, icon]) => (
             <Link
               href={href}
               key={href}
@@ -61,23 +67,44 @@ export default function SiteChrome({
             className={styles.join}
             onClick={() => setOpen(false)}
           >
-            <i className="fa-solid fa-user-plus" aria-hidden="true" /> S&apos;inscrire
+            <i className="fa-solid fa-user-plus" aria-hidden="true" /> S'inscrire
           </Link>
-          <Link
-            href="/login"
-            className={`${styles.mobileMember} ${pathname.startsWith("/espace-prive") ? styles.active : ""}`}
-            onClick={() => setOpen(false)}
-          >
-            <i className="fa-solid fa-shield-halved" aria-hidden="true" /> Espace Privé
-          </Link>
+          {!isPrivateSpace && !isAdmin && (
+            <Link
+              href="/login"
+              className={`${styles.mobileMember} ${pathname.startsWith("/espace-prive") ? styles.active : ""}`}
+              onClick={() => setOpen(false)}
+            >
+              <i className="fa-solid fa-shield-halved" aria-hidden="true" /> Espace Privé
+            </Link>
+          )}
+          {(isPrivateSpace || isAdmin) && (
+            <Link
+              href="/"
+              className={styles.homeLink}
+              onClick={() => setOpen(false)}
+            >
+              <i className="fa-solid fa-house" aria-hidden="true" /> Accueil
+            </Link>
+          )}
         </nav>
         <div className={styles.actions}>
-          <Link
-            href="/login"
-            className={`${styles.login} ${styles.desktopMember} ${pathname.startsWith("/espace-prive") ? styles.active : ""}`}
-          >
-            <i className="fa-solid fa-shield-halved" aria-hidden="true" /> Espace Privé
-          </Link>
+          {!isPrivateSpace && !isAdmin && !isLogin && (
+            <Link
+              href="/login"
+              className={`${styles.login} ${styles.desktopMember} ${pathname.startsWith("/espace-prive") ? styles.active : ""}`}
+            >
+              <i className="fa-solid fa-shield-halved" aria-hidden="true" /> Espace Privé
+            </Link>
+          )}
+          {(isPrivateSpace || isAdmin || isLogin) && (
+            <Link
+              href="/"
+              className={styles.homeLinkDesktop}
+            >
+              <i className="fa-solid fa-house" aria-hidden="true" /> Accueil
+            </Link>
+          )}
           <button
             className={styles.menu}
             onClick={() => setOpen(!open)}
@@ -88,7 +115,20 @@ export default function SiteChrome({
           </button>
         </div>
       </header>
+
+      {/* Moto du mouvement - visible sur toutes les pages */}
+      <div className={styles.mottoBar} aria-label="Devise du mouvement ADS">
+        <div className={styles.mottoContainer}>
+          {mottoItems.map((item) => (
+            <span key={item.label} className={`${styles.mottoItem} ${styles[item.color]}`}>
+              {item.label}
+            </span>
+          ))}
+        </div>
+      </div>
+
       {children}
+
       <footer className={styles.footer}>
         <div className={styles.footerBrand}>
           <Image
@@ -105,7 +145,7 @@ export default function SiteChrome({
         </div>
         <div className={styles.footerLinks}>
           <h2>Navigation</h2>
-          {links.filter(([, href]) => href !== "/espace-prive").map(([label, href, icon]) => (
+          {links.map(([label, href, icon]) => (
             <Link href={href} key={href}>
               <i className={`fa-solid ${icon}`} aria-hidden="true" />
               {label}
@@ -115,7 +155,7 @@ export default function SiteChrome({
         <div className={styles.socials}>
           <h2>Contact</h2>
           <Link href="/#contact">
-            <i className="fa-solid fa-envelope" /> Écrire à l’administration
+            <i className="fa-solid fa-envelope" /> Écrire à l'administration
           </Link>
           <a href="https://maps.google.com/?q=Porto-Novo,+Benin">
             <i className="fa-solid fa-location-dot" /> Diocèse de Porto-Novo, Bénin

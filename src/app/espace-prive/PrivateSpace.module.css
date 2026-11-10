@@ -53,6 +53,39 @@
   white-space: nowrap;
 }
 
+.mottoSmall {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.mottoItemSmall {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mottoRed {
+  color: #fff;
+  background: linear-gradient(110deg, #a31222, #691221);
+}
+
+.mottoYellow {
+  color: #102d2b;
+  background: linear-gradient(110deg, #e1ad4c, #d4b354);
+}
+
+.mottoGreen {
+  color: #fff;
+  background: linear-gradient(110deg, #1a4a50, #2e7d32);
+}
+
 .drawer {
   display: flex;
   flex: 1;

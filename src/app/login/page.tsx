@@ -54,6 +54,11 @@ export default function LoginPage() {
           <Image src="/img/logo.jpeg" alt="Emblème ADS" width={50} height={50} className={styles.logo} />
           <span><strong>ADS</strong><small>Fraternité · Jeunes Leaders</small></span>
         </Link>
+        <div className={styles.mottoBar}>
+          <span className={`${styles.mottoItem} ${styles.mottoRed}`}>Service</span>
+          <span className={`${styles.mottoItem} ${styles.mottoYellow}`}>Union</span>
+          <span className={`${styles.mottoItem} ${styles.mottoGreen}`}>Vie et Emploi</span>
+        </div>
         <div className={styles.welcome}>
           <span className={styles.eyebrow}>Espace membre ADS</span>
           <h1>Content de te<br />revoir dans la<br /><em>fraternité.</em></h1>
@@ -64,7 +69,12 @@ export default function LoginPage() {
             <span><i className="fa-solid fa-people-group" /> Union</span>
           </div>
         </div>
-        <footer>© {new Date().getFullYear()} ADS, Fraternité, Jeunes Leaders</footer>
+        <footer>
+          <Link href="/" className={styles.homeLink}>
+            <i className="fa-solid fa-house" /> Retour à l’accueil
+          </Link>
+          <span>© {new Date().getFullYear()} ADS, Fraternité, Jeunes Leaders</span>
+        </footer>
       </section>
       <section className={styles.formSide}>
         <div className={styles.card}>
