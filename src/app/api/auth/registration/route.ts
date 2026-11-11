@@ -21,18 +21,20 @@ function validPassword(password: string) {
 }
 
 function slug(value: string) {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, ".")
-    .replace(/^\.+|\.+$/g, "");
+  return (
+    value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ".")
+      .replace(/^\.+|\.+$/g, "") || "membre"
+  );
 }
 
 async function uniqueIdentifiers(firstName: string, lastName: string) {
-  for (let attempt = 0; attempt < 10; attempt += 1) {
-    const username = `${slug(firstName)}.${slug(lastName)}.${crypto.randomInt(10000, 100000)}`;
-    const personalNumber = String(crypto.randomInt(10000000, 100000000));
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const username = `${slug(firstName)}.${slug(lastName)}.${crypto.randomInt(1000, 99999)}`;
+    const personalNumber = `ADS-${new Date().getFullYear()}-${crypto.randomInt(100000, 999999)}`;
     const usernameExists = await db.query.users.findFirst({
       where: eq(users.username, username),
     });
@@ -41,7 +43,11 @@ async function uniqueIdentifiers(firstName: string, lastName: string) {
     });
     if (!usernameExists && !numberExists) return { username, personalNumber };
   }
-  throw new Error("Impossible de générer des identifiants uniques.");
+  const stamp = Date.now().toString().slice(-6);
+  return {
+    username: `${slug(firstName)}.${slug(lastName)}.${stamp}`,
+    personalNumber: `ADS-${new Date().getFullYear()}-${stamp}`,
+  };
 }
 
 export async function GET(request: Request) {
@@ -137,7 +143,8 @@ export async function POST(request: Request) {
   const lastName = field(body, "lastName");
   const birthDate = field(body, "birthDate");
   const birthPlace = field(body, "birthPlace");
-  const gender = field(body, "gender");
+  const rawGender = field(body, "gender");
+  const gender = rawGender.toLowerCase().includes("fem") ? "Féminin" : "Masculin";
   const phone = field(body, "phone");
   const password = field(body, "password");
   const continent = field(body, "continent");
@@ -157,7 +164,6 @@ export async function POST(request: Request) {
     !lastName ||
     !birthDate ||
     !birthPlace ||
-    !["Masculin", "Féminin"].includes(gender) ||
     !phone ||
     !continent ||
     !country ||

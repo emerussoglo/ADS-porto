@@ -243,10 +243,6 @@ export default function RegistrationPage() {
       return;
     }
     if (step === 7) {
-      if (mode === "new" && !photo) {
-        setError("Ajoute une photo d’identité pour continuer.");
-        return;
-      }
       setStep(8);
       return;
     }
@@ -313,15 +309,11 @@ export default function RegistrationPage() {
   };
 
   const submitPayment = async () => {
-    if (!reference.trim() && !proof) {
-      setError("Saisis une référence de paiement ou joins un justificatif.");
-      return;
-    }
     setSubmitting(true);
     setError("");
     try {
       const form = new FormData();
-      form.set("reference", reference.trim());
+      form.set("reference", reference.trim() || "Paiement en attente de validation");
       if (photo) form.set("photo", photo);
       if (proof) form.set("proof", proof);
       const response = await fetch("/api/auth/registration/payment", {

@@ -150,6 +150,52 @@ export async function PUT(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
+  if (body.action === "validate_user") {
+    const userId = body.userId?.trim() ?? "";
+    const decision = body.decision ?? "approve";
+    if (!userId) {
+      return NextResponse.json({ error: "Identifiant utilisateur requis." }, { status: 400 });
+    }
+    const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+    if (!user) {
+      return NextResponse.json({ error: "Utilisateur introuvable." }, { status: 404 });
+    }
+    const now = new Date().toISOString();
+    const approved = decision === "approve";
+    await db.transaction(async (tx) => {
+      await tx
+        .update(users)
+        .set({ status: approved ? "active" : "suspended", updatedAt: now })
+        .where(eq(users.id, userId));
+
+      await tx
+        .update(membershipPayments)
+        .set({
+          status: approved ? "approved" : "rejected",
+          reviewedBy: adminId,
+          reviewedAt: now,
+          updatedAt: now,
+        })
+        .where(
+          and(
+            eq(membershipPayments.userId, userId),
+            eq(membershipPayments.status, "pending_review"),
+          ),
+        );
+
+      await tx.insert(notifications).values({
+        id: crypto.randomUUID(),
+        userId,
+        title: approved ? "Compte validé et activé" : "Compte refusé ou suspendu",
+        content: approved
+          ? "Bienvenue dans la famille ADS ! Ton compte a été validé par l’administration. Tu peux désormais accéder à l'ensemble de ton Espace Privé."
+          : `Ton dossier n'a pas pu être validé. ${body.note?.trim() ?? "Contacte l’administration ADS."}`,
+      });
+    });
+
+    return NextResponse.json({ ok: true, status: approved ? "active" : "suspended" });
+  }
+
   const paymentId = body.paymentId?.trim() ?? "";
   const decision = body.decision;
   if (!paymentId || (decision !== "approve" && decision !== "reject")) {

@@ -30,7 +30,12 @@ export default function SiteChrome({
   const pathname = usePathname();
   const isPrivateSpace = pathname.startsWith("/espace-prive");
   const isAdmin = pathname.startsWith("/admin");
+  const isDashboard = isPrivateSpace || isAdmin;
   const isLogin = pathname === "/login";
+
+  if (isDashboard) {
+    return <main>{children}</main>;
+  }
 
   return (
     <div className={styles.shell}>

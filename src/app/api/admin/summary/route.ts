@@ -55,11 +55,22 @@ export async function GET(request: Request) {
       userId: users.id,
       username: users.username,
       email: users.email,
+      phone: users.phone,
+      status: users.status,
+      createdAt: users.createdAt,
       firstName: memberProfiles.firstName,
       lastName: memberProfiles.lastName,
-      status: users.status,
+      parish: memberProfiles.parish,
       level: memberProfiles.level,
       approvedNextLevel: memberProfiles.approvedNextLevel,
+      gender: memberProfiles.gender,
+      birthDate: memberProfiles.birthDate,
+      birthPlace: memberProfiles.birthPlace,
+      fatherName: memberProfiles.fatherName,
+      fatherPhone: memberProfiles.fatherPhone,
+      motherName: memberProfiles.motherName,
+      motherPhone: memberProfiles.motherPhone,
+      avatarUrl: memberProfiles.avatarUrl,
     })
     .from(users)
     .leftJoin(memberProfiles, eq(memberProfiles.userId, users.id));

@@ -40,17 +40,17 @@ export async function POST(request: Request) {
   }
 
   const form = await request.formData();
-  const reference = String(form.get("reference") ?? "").trim();
+  let reference = String(form.get("reference") ?? "").trim();
   const photo = form.get("photo");
   const proof = form.get("proof");
   if (!reference && !isFile(proof)) {
-    return NextResponse.json({ error: "Ajoute une référence ou une preuve de paiement." }, { status: 400 });
+    reference = "Cotisation à régler / vérifier auprès de la paroisse";
   }
-  if (isFile(photo) && !(await validUpload(photo, ["image/jpeg", "image/png", "image/webp"], 3 * 1024 * 1024))) {
-    return NextResponse.json({ error: "La photo doit être un JPG, PNG ou WEBP valide de 3 Mo maximum." }, { status: 400 });
+  if (isFile(photo) && !(await validUpload(photo, ["image/jpeg", "image/png", "image/webp"], 5 * 1024 * 1024))) {
+    return NextResponse.json({ error: "La photo doit être un JPG, PNG ou WEBP valide de 5 Mo maximum." }, { status: 400 });
   }
-  if (isFile(proof) && !(await validUpload(proof, ["image/jpeg", "image/png", "image/webp", "application/pdf"], 5 * 1024 * 1024))) {
-    return NextResponse.json({ error: "La preuve doit être un JPG, PNG, WEBP ou PDF valide de 5 Mo maximum." }, { status: 400 });
+  if (isFile(proof) && !(await validUpload(proof, ["image/jpeg", "image/png", "image/webp", "application/pdf"], 10 * 1024 * 1024))) {
+    return NextResponse.json({ error: "La preuve doit être un JPG, PNG, WEBP ou PDF valide de 10 Mo maximum." }, { status: 400 });
   }
 
   const [account] = await db
@@ -85,9 +85,6 @@ export async function POST(request: Request) {
   }
   if (account.status === "active" && !account.nextLevel) {
     return NextResponse.json({ error: "Aucun passage de niveau n’a été accordé pour ce renouvellement." }, { status: 409 });
-  }
-  if (account.status === "pending" && !account.avatarUrl && !isFile(photo)) {
-    return NextResponse.json({ error: "Ajoute ta photo d’identité avant de transmettre le dossier." }, { status: 400 });
   }
 
   const [setting] = await db
